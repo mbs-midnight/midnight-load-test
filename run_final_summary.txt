@@ -1,0 +1,7 @@
+SUSTAINED LOAD RUN -- 8 wallets, split proxy, 2x proof-server 8.1.0
+duration 17.6 min | submitted 1912 | failed 1443 | success 57.0%
+aggregate 1.81 tx/s (0.226/wallet)
+prove p50 0.45s  cycle p50 2.15s
+blocks 173 | non-empty 100% | tx/block mean 10.8 max 23
+fullness mean 4.01% p90 6.35% max 8.56%
+fee: 1.000 SPECK/tx across 1861 txs -- FLOOR HOLDS at 4% fullness

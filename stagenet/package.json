@@ -1,0 +1,43 @@
+{
+  "name": "midnight-stagenet-smoke",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Smoke test of the Midnight 2.0 / ledger-9 stack against Stagenet. Isolated from the ledger-8 preview harness one directory up -- separate node_modules, separate lockfile.",
+  "//versions": "Pinned to the Stagenet support matrix. Mixing versions across these lines is the documented #1 cause of failure, so every spec here is EXACT, not a range.",
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "^0.19.0-rc.0",
+    "@midnight-ntwrk/midnight-js-contracts": "^5.0.0-beta.7",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "^5.0.0-beta.7",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "^5.0.0-beta.7",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "^5.0.0-beta.7",
+    "@midnight-ntwrk/midnight-js-network-id": "^5.0.0-beta.7",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "^5.0.0-beta.7",
+    "@midnight-ntwrk/midnight-js-types": "^5.0.0-beta.7",
+    "@midnight-ntwrk/midnight-js-utils": "^5.0.0-beta.7",
+    "@midnight-ntwrk/wallet-sdk": "2.0.0-beta.2",
+    "@scure/bip39": "^2.0.1",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "//utilities-override": "REQUIRED. wallet-sdk-facade@5.0.0-beta.2 does `import { Clock } from '@midnight-ntwrk/wallet-sdk-utilities'`, but the wallet-sdk@2.0.0-beta.2 barrel pins utilities to 1.2.0, which predates Clock. A clean install therefore fails at IMPORT time with: \"The requested module '@midnight-ntwrk/wallet-sdk-utilities' does not provide an export named 'Clock'\". 1.2.1 is a patch bump whose exports are a strict superset of 1.2.0 plus Clock. Report upstream: the barrel's pin is wrong, not our install.",
+  "overrides": {
+    "@midnight-ntwrk/wallet-sdk-utilities": "1.2.1"
+  },
+  "scripts": {
+    "addr": "tsx src/smoke.ts --phase addr",
+    "status": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/smoke.ts --phase status",
+    "register": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/smoke.ts --phase register",
+    "unshielded": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/smoke.ts --phase unshielded",
+    "shielded": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/smoke.ts --phase shielded",
+    "typecheck": "tsc --noEmit",
+    "shield": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/smoke.ts --phase shield",
+    "compact": "cd contract && compact compile +0.34.0 src/shielded.compact src/managed/shielded",
+    "mint": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/mint.ts"
+  }
+}

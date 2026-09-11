@@ -1,0 +1,17 @@
+{
+  "started_utc": "2026-08-27T22:34:39.335Z",
+  "duration_s": 120,
+  "target_tps": "unlimited",
+  "wallets": 2,
+  "mix": "uniform",
+  "contracts": [
+    {
+      "name": "BenchR4_S0",
+      "k": 14,
+      "slots": 0
+    }
+  ],
+  "ended_utc": "2026-08-27T22:37:02.123Z",
+  "submitted": 9,
+  "failed": 0
+}

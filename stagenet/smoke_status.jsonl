@@ -1,0 +1,4 @@
+{"t":"2026-09-11T15:46:59.111Z","phase":"status","event":"proof_server","version":"9.0.0-rc.5"}
+{"t":"2026-09-11T15:47:28.615Z","phase":"status","event":"synced","nightCoins":17,"nightValue":"5000000000","registeredCoins":17,"shieldedCoins":72,"shieldedValue":"1000000","dustCoins":17,"dustPending":0,"dustSpeck":"24999454038106239839"}
+{"t":"2026-09-11T15:47:47.927Z","phase":"status","event":"proof_server","version":"9.0.0-rc.5"}
+{"t":"2026-09-11T15:48:17.538Z","phase":"status","event":"synced","nightCoins":17,"nightValue":"5000000000","nightUtxoStar":["4999984000","1000","1000","1000","1000","1000","1000","1000","1000","1000","1000","1000","1000","1000","1000","1000","1000"],"dustPerCoin":["24999.454","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000","0.000"],"registeredCoins":17,"shieldedCoins":72,"shieldedValue":"1000000","dustCoins":17,"dustPending":0,"dustSpeck":"24999454038106239839"}

@@ -1,0 +1,132 @@
+[
+  {
+    "name": "BenchR4_S0",
+    "k": 14,
+    "rounds": 4,
+    "slots": 0,
+    "managedDir": "contracts/BenchR4_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "7f1d7441e96085ed4513dcfabfc69d170037db2e65a2215fe2ff7cfea08a0b01",
+    "deployTxId": "007d08374413f3efbd1261beacf84dbec9df9bc210040dc1d52ca760ad10eda5b6",
+    "deployMs": 18546
+  },
+  {
+    "name": "BenchR64_S0",
+    "k": 18,
+    "rounds": 64,
+    "slots": 0,
+    "managedDir": "contracts/BenchR64_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "764f231dac57747dcd529a90ec6def52b2bc86cc6f3a5d04c04cf47d152cb2f5",
+    "deployTxId": "00cab130cd1b9a67563d6ccb1d48db8472c6d66b1d9594b9ed7175225a445b97a2",
+    "deployMs": 19367
+  },
+  {
+    "name": "BenchR64_S8",
+    "k": 18,
+    "rounds": 64,
+    "slots": 8,
+    "managedDir": "contracts/BenchR64_S8",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "ccf911642ec081a78cc8919e47a57ba011e9cf535aaf52dc28d75f7d195e14ed",
+    "deployTxId": "000dd1a1ebb772de196e4558b68fce758867a4d866857292a086b8d146fd6e483f",
+    "deployMs": 23510
+  },
+  {
+    "name": "BenchR64_S32",
+    "k": 18,
+    "rounds": 64,
+    "slots": 32,
+    "managedDir": "contracts/BenchR64_S32",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "adde4b4c7a69e21f8da13edc87246e82e20585bfbc5031e709def013a130d707",
+    "deployTxId": "002e90e5ddd8d4134df4b017fff56a1ff69d1c65a55c530ed4839025d79b478a42",
+    "deployMs": 25166
+  },
+  {
+    "name": "BenchR1_S0",
+    "k": 19,
+    "rounds": 1,
+    "slots": 0,
+    "managedDir": "contracts/BenchR1_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "2fc4b16711938d6bc0951858cca97dc44ad3535c6544201986883e62a2c9fffc",
+    "deployTxId": "003b991cdfc57393b179dda93162451406577c409f528c88f36aeac28fe5e186e0",
+    "deployMs": 21819
+  },
+  {
+    "name": "BenchR2_S0",
+    "k": 19,
+    "rounds": 2,
+    "slots": 0,
+    "managedDir": "contracts/BenchR2_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "9ec6338cb40f62c795aa356a699b93f6b54bdaeab8c2893388fe957c98cee468",
+    "deployTxId": "000086451353256633143f95f96039412490c215bf4edb65b135609427c8186611",
+    "deployMs": 18879
+  },
+  {
+    "name": "BenchR8_S0",
+    "k": 19,
+    "rounds": 8,
+    "slots": 0,
+    "managedDir": "contracts/BenchR8_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "1599a54ffb41871335ba13afee599a4070e4e8e1eba3d2dd428bdd3701efb9b8",
+    "deployTxId": "00c50a615137da777cdeff43501de52a207c8dc17a6dfc8465d8b6b4f84abf10d1",
+    "deployMs": 24145
+  },
+  {
+    "name": "BenchR16_S0",
+    "k": 19,
+    "rounds": 16,
+    "slots": 0,
+    "managedDir": "contracts/BenchR16_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "6de81e4b2b955bb9ff7f82a2d64e068550b302672efbf1ddee34fae6c10d342a",
+    "deployTxId": "006259280961215bdde96b470e5ae849579b2aeea2a49efb3ccc2c6dc5b250605e",
+    "deployMs": 23419
+  },
+  {
+    "name": "BenchR32_S0",
+    "k": 19,
+    "rounds": 32,
+    "slots": 0,
+    "managedDir": "contracts/BenchR32_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "65090c696af7170711b836e99ccbfa85985921bb2effa19e32a836982e1026ca",
+    "deployTxId": "00c9f6d855a4f42fa1630db33eb51f1496ca48b7e0b6587c82e0f106dd00827e24",
+    "deployMs": 17445
+  },
+  {
+    "name": "BenchR128_S0",
+    "k": 19,
+    "rounds": 128,
+    "slots": 0,
+    "managedDir": "contracts/BenchR128_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "e32d79daaabdd89c61e587d9d1fd0329076abdb34ff3a2d116ecc1d1bd840dc5",
+    "deployTxId": "008034df3bed5b06e72e0daf8b1028cce32bb60dd92f8455214a064b2586e42753",
+    "deployMs": 18589
+  }
+]

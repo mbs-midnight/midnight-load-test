@@ -1,0 +1,20 @@
+{"t":"2026-09-03T20:03:19.236Z","phase":"sustain","event":"proof_server","version":"9.0.0-rc.5"}
+{"t":"2026-09-03T20:03:41.914Z","phase":"sustain","event":"synced","nightCoins":17,"nightValue":"5000000000","registeredCoins":17,"shieldedCoins":72,"shieldedValue":"1000000","dustCoins":17,"dustPending":0,"dustSpeck":"14524337117017985808"}
+{"t":"2026-09-03T20:03:41.915Z","phase":"sustain","event":"sustain_start","n":14,"outputsEach":68,"tokenType":"55dd57fbbaeb2c33cdbaca4c5428d297837df02171fe4aa4e98e5d605a61f6aa","dustCoins":17,"note":"ok"}
+{"t":"2026-09-03T20:05:05.936Z","phase":"sustain","event":"proved","i":0,"ms":84012,"ready":1,"bytes":737345}
+{"t":"2026-09-03T20:05:07.351Z","phase":"sustain","event":"prove_fail","i":1,"ms":1413,"error":"Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust"}
+{"t":"2026-09-03T20:05:08.209Z","phase":"sustain","event":"prove_fail","i":2,"ms":858,"error":"Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust"}
+{"t":"2026-09-03T20:05:09.058Z","phase":"sustain","event":"prove_fail","i":3,"ms":849,"error":"Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust"}
+{"t":"2026-09-03T20:05:09.947Z","phase":"sustain","event":"prove_fail","i":4,"ms":889,"error":"Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust"}
+{"t":"2026-09-03T20:05:10.616Z","phase":"sustain","event":"prove_fail","i":5,"ms":669,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:11.278Z","phase":"sustain","event":"prove_fail","i":6,"ms":662,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:11.943Z","phase":"sustain","event":"prove_fail","i":7,"ms":665,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:12.611Z","phase":"sustain","event":"prove_fail","i":8,"ms":668,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:13.275Z","phase":"sustain","event":"prove_fail","i":9,"ms":664,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:13.942Z","phase":"sustain","event":"prove_fail","i":10,"ms":667,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:14.608Z","phase":"sustain","event":"prove_fail","i":11,"ms":666,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:15.271Z","phase":"sustain","event":"prove_fail","i":12,"ms":663,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:15.941Z","phase":"sustain","event":"prove_fail","i":13,"ms":670,"error":"Insufficient funds | Insufficient funds | Insufficient funds"}
+{"t":"2026-09-03T20:05:15.941Z","phase":"sustain","event":"proved_all","ready":1}
+{"t":"2026-09-03T20:05:19.084Z","phase":"sustain","event":"release_fail","i":0,"error":"Transaction submission error | Transaction submission error | Transaction submission error | Transaction submission failed | Transaction submission failed | 1010: Invalid Transaction: Transaction would exhaust the block limits"}
+{"t":"2026-09-03T20:05:19.084Z","phase":"sustain","event":"sustain_done","proved":1,"ok":0,"fail":1}

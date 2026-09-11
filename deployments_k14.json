@@ -1,0 +1,15 @@
+[
+  {
+    "name": "BenchR4_S0",
+    "k": 14,
+    "rounds": 4,
+    "slots": 0,
+    "managedDir": "contracts/BenchR4_S0",
+    "circuitNames": [
+      "run"
+    ],
+    "contractAddress": "7f1d7441e96085ed4513dcfabfc69d170037db2e65a2215fe2ff7cfea08a0b01",
+    "deployTxId": "007d08374413f3efbd1261beacf84dbec9df9bc210040dc1d52ca760ad10eda5b6",
+    "deployMs": 18546
+  }
+]

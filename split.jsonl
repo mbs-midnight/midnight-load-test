@@ -1,0 +1,9 @@
+{"phase":"split","wallet":"w001","error":"Cannot read properties of undefined (reading 'toString')"}
+{"phase":"split","wallet":"w001","error":"Insufficient funds"}
+{"phase":"split","wallet":"w001","error":"Insufficient funds"}
+{"phase":"split","wallet":"w001","error":"exceeded block limit in transaction fee computation","t":"2026-08-24T22:52:40.343Z"}
+{"phase":"split","wallet":"w001","sweep":128,"ok":true,"buildMs":539,"t":"2026-08-24T23:33:39.363Z"}
+{"phase":"split","wallet":"w001","error":"Transaction submission error","t":"2026-08-25T00:01:47.929Z"}
+{"phase":"split","wallet":"w001","error":"[0] Transaction submission error  name=(FiberFailure) SubmissionError","t":"2026-08-25T00:37:09.206Z"}
+{"phase":"split","wallet":"w001","error":"[e] Transaction submission error  name=(FiberFailure) SubmissionError | [e].effect _tag=Fail | [e].effect.error Transaction submission error  _tag=SubmissionError  name=SubmissionError | [e].effect.error.cause Transaction submission failed  _tag=SubmissionError  name=SubmissionError | [e].effect.error.cause.cause 1010: Invalid Transaction: Custom error: 192  name=RpcError  code=1010 | [e].effect.error.cause.cause.data=\"Custom error: 192\"","t":"2026-08-25T01:26:55.684Z"}
+{"phase":"split","wallet":"w001","txId":"00c48189f16026e7e088a53e160f331d852da78e0ae160d091b412e8bc8606c7ee","engines":8,"ammo":24,"buildMs":188,"proveMs":2215,"submitMs":18716,"t":"2026-08-25T01:36:37.904Z"}

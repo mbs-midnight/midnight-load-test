@@ -1,0 +1,7 @@
+{"t":"2026-08-30T17:55:17.560Z","event":"synced","dustCoins":17,"shieldedCoins":0}
+{"t":"2026-08-30T17:55:17.562Z","event":"deploying"}
+{"t":"2026-08-30T17:56:32.051Z","event":"synced","dustCoins":17,"shieldedCoins":0}
+{"t":"2026-08-30T17:56:32.053Z","event":"deploying"}
+{"t":"2026-08-30T17:56:56.044Z","event":"deployed","contractAddress":"04dab0ea56a833aabbe36c4e68c442edad8c03e5cb5855bac367d94815985242","ms":23991}
+{"t":"2026-08-30T17:56:56.044Z","event":"minting","contractAddress":"04dab0ea56a833aabbe36c4e68c442edad8c03e5cb5855bac367d94815985242","amount":"1000000"}
+{"t":"2026-08-30T17:57:20.012Z","event":"minted","status":"SucceedEntirely","ms":23967,"txId":"006db19df8e2973cc72c591b46143c0741ad5d059a2cf579f17dc427d462302a0d"}

@@ -1,0 +1,167 @@
+{"phase":"churn","wallet":"w005","txId":"003a0efa3814b97ebcf34a0742bc08f2b1f99ad245ee5775aa53e0e816d496c8c2","outputs":1,"per":"8","buildMs":3937,"proveMs":3704,"submitMs":1181,"retries":0,"submitWait":"Submitted","total_ms":8822,"t":"2026-08-28T20:52:18.110Z"}
+{"phase":"churn","wallet":"w001","txId":"0095bb9216a63c376290f3a5a4b8d720e236faeac7ae9cf677b04fe569640c3a65","outputs":1,"per":"5","buildMs":4051,"proveMs":7185,"submitMs":1173,"retries":0,"submitWait":"Submitted","total_ms":12409,"t":"2026-08-28T20:52:21.695Z"}
+{"phase":"churn","wallet":"w009","txId":"00d43ea592dfa7af137c2790dd9776125c022ca52fbe3f94bf719b7d6fde6d382e","outputs":1,"per":"8","buildMs":3968,"proveMs":7214,"submitMs":1237,"retries":0,"submitWait":"Submitted","total_ms":12419,"t":"2026-08-28T20:52:21.708Z"}
+{"phase":"churn","wallet":"w007","txId":"00960ec7b0e8a8e4c86d898b40186dcd4a0b3a796e51eeb2e9f7267f3c6d8831cf","outputs":1,"per":"8","buildMs":4060,"proveMs":10734,"submitMs":1169,"retries":0,"submitWait":"Submitted","total_ms":15963,"t":"2026-08-28T20:52:25.252Z"}
+{"phase":"churn","wallet":"w006","txId":"00c5ed6eb527043ecff9a83e5c94563d1f67e77b99d7fa49f08f0427b1ced65787","outputs":1,"per":"8","buildMs":4180,"proveMs":10659,"submitMs":1178,"retries":0,"submitWait":"Submitted","total_ms":16017,"t":"2026-08-28T20:52:25.307Z"}
+{"phase":"churn","wallet":"w003","txId":"00c49ead732fc4245c3fa9d9d930cd4d9a96d4cdf535910dd895a22cd4279d81c7","outputs":1,"per":"8","buildMs":4194,"proveMs":14134,"submitMs":1223,"retries":0,"submitWait":"Submitted","total_ms":19551,"t":"2026-08-28T20:52:28.839Z"}
+{"phase":"churn","wallet":"w002","txId":"00e4fa164301a756bb49c478805ae34e550124ce1a7120d76880a7eb4cae0de015","outputs":1,"per":"75000000","buildMs":4206,"proveMs":14316,"submitMs":2372,"retries":0,"submitWait":"Submitted","total_ms":20894,"t":"2026-08-28T20:52:30.182Z"}
+{"phase":"churn","wallet":"w010","txId":"00d44ba0807143d9fb6dc987e3ec6f7ea5986b9d6dda8fc8ac358c80243e764538","outputs":1,"per":"8","buildMs":4216,"proveMs":17630,"submitMs":1181,"retries":0,"submitWait":"Submitted","total_ms":23027,"t":"2026-08-28T20:52:32.317Z"}
+{"phase":"churn","wallet":"w008","txId":"0012fc5e0c7e06784c6de2571c9d16e0eafa2665b213d3ea585db0192ecd509e33","outputs":1,"per":"8","buildMs":4416,"proveMs":17784,"submitMs":1178,"retries":0,"submitWait":"Submitted","total_ms":23378,"t":"2026-08-28T20:52:32.667Z"}
+{"phase":"churn","wallet":"w004","txId":"00c59b7e82f0b45d6b18abb97ae82db9c39da737678d1d01fa04d4782a45dbd633","outputs":1,"per":"8","buildMs":4440,"proveMs":21501,"submitMs":1184,"retries":0,"submitWait":"Submitted","total_ms":27125,"t":"2026-08-28T20:52:36.414Z"}
+{"phase":"churn","wallet":"w005","txId":"00855f939269e356558a624c563a69e5034b071f36639198289a7664d6efa26251","outputs":1,"per":"208333333","buildMs":169,"proveMs":20107,"submitMs":1213,"retries":0,"submitWait":"Submitted","total_ms":21489,"t":"2026-08-28T20:52:39.601Z"}
+{"phase":"churn","wallet":"w001","txId":"00aff1ced24e3c7aa03a09e531e03abd9f7dcb5bfb5b7269d47da1ace1c4d9c412","outputs":1,"per":"5","buildMs":175,"proveMs":17133,"submitMs":1161,"retries":0,"submitWait":"Submitted","total_ms":18469,"t":"2026-08-28T20:52:40.171Z"}
+{"phase":"churn","wallet":"w009","txId":"0037a16597c8edeb8201167d4ab46ecb139ccaf00cec9d1dc59219d5f89452114a","outputs":1,"per":"208333333","buildMs":756,"proveMs":19744,"submitMs":1165,"retries":0,"submitWait":"Submitted","total_ms":21665,"t":"2026-08-28T20:52:43.375Z"}
+{"phase":"churn","wallet":"w007","txId":"0045c4693f95629c667eaa8b8b83d3d4e2c5dc9478aa6eef862f573068e522f6c5","outputs":1,"per":"208333333","buildMs":166,"proveMs":17154,"submitMs":1169,"retries":0,"submitWait":"Submitted","total_ms":18490,"t":"2026-08-28T20:52:43.748Z"}
+{"phase":"churn","wallet":"w006","txId":"00c3e2c85e63ccb779e1e223566021603db975be09edba5c238a21fdf24f294d83","outputs":1,"per":"208333333","buildMs":163,"proveMs":20353,"submitMs":1175,"retries":0,"submitWait":"Submitted","total_ms":21691,"t":"2026-08-28T20:52:47.003Z"}
+{"phase":"churn","wallet":"w003","txId":"00dd84007cf34dd5d58d431525bcff705c97d861486ebbb48ff72bd14a4fe320b5","outputs":1,"per":"208333333","buildMs":168,"proveMs":17440,"submitMs":1216,"retries":0,"submitWait":"Submitted","total_ms":18824,"t":"2026-08-28T20:52:47.667Z"}
+{"phase":"churn","wallet":"w002","txId":"0072c22edd8173237277ccdc3e02edbb29a363ab6c192111f34ff479d332e77a90","outputs":1,"per":"75000000","buildMs":178,"proveMs":19271,"submitMs":1582,"retries":0,"submitWait":"Submitted","total_ms":21031,"t":"2026-08-28T20:52:51.217Z"}
+{"phase":"churn","wallet":"w010","txId":"00e1a68342d8197bd21357262b242cc49a502626d4878c82ddf1a9a23bc01e4a72","outputs":1,"per":"208333333","buildMs":174,"proveMs":17650,"submitMs":1237,"retries":0,"submitWait":"Submitted","total_ms":19061,"t":"2026-08-28T20:52:51.383Z"}
+{"phase":"churn","wallet":"w008","txId":"003460b3bbee27b12844a2ac4c9ba7ba68caf88cbee81bff4edf7cc80081aa29d6","outputs":1,"per":"208333333","buildMs":158,"proveMs":20574,"submitMs":1213,"retries":0,"submitWait":"Submitted","total_ms":21945,"t":"2026-08-28T20:52:54.616Z"}
+{"phase":"churn","wallet":"w004","txId":"0000a076e0b3432f06f0a7d966717b1e88b0838981045dc98539554c302e4398a3","outputs":1,"per":"208333333","buildMs":162,"proveMs":17333,"submitMs":1218,"retries":0,"submitWait":"Submitted","total_ms":18714,"t":"2026-08-28T20:52:55.129Z"}
+{"phase":"churn","wallet":"w005","txId":"00b9257fa73e3a64bcaf901127e4a41d5b398f784009b3b87006aebc13dfd866ef","outputs":1,"per":"8","buildMs":454,"proveMs":17035,"submitMs":1164,"retries":0,"submitWait":"Submitted","total_ms":18653,"t":"2026-08-28T20:52:58.259Z"}
+{"phase":"churn","wallet":"w001","txId":"002ddd4756c855320dac16cb750898422d4efca55109bb6a38f3bbe87067e7463b","outputs":1,"per":"5","buildMs":167,"proveMs":17370,"submitMs":1203,"retries":0,"submitWait":"Submitted","total_ms":18740,"t":"2026-08-28T20:52:58.916Z"}
+{"phase":"churn","wallet":"w009","txId":"00b7a005559e3418bac649e9a239035e2651809dc605ea9cd9c2df3e5eda8b01cb","outputs":1,"per":"8","buildMs":167,"proveMs":17273,"submitMs":1206,"retries":0,"submitWait":"Submitted","total_ms":18646,"t":"2026-08-28T20:53:02.026Z"}
+{"phase":"churn","wallet":"w007","txId":"0035d71842e5bd4f81eed01865ae6e8b676141454e285dbe0ffb59833139ca75de","outputs":1,"per":"208333333","buildMs":173,"proveMs":17517,"submitMs":1206,"retries":0,"submitWait":"Submitted","total_ms":18896,"t":"2026-08-28T20:53:02.648Z"}
+{"phase":"churn","wallet":"w006","txId":"00f7724ba27fcb579a2c1de0aecd0dcf1d93aa0b5bdf5a4e07502917a9219bc281","outputs":1,"per":"8","buildMs":169,"proveMs":17606,"submitMs":1164,"retries":0,"submitWait":"Submitted","total_ms":18939,"t":"2026-08-28T20:53:05.945Z"}
+{"phase":"churn","wallet":"w003","txId":"00ed4f4342f3afba7338a81e41ded2ade1807bc3b78b7a6bbfb3d8428e1d66aebf","outputs":1,"per":"8","buildMs":170,"proveMs":17331,"submitMs":1189,"retries":0,"submitWait":"Submitted","total_ms":18690,"t":"2026-08-28T20:53:06.362Z"}
+{"phase":"churn","wallet":"w002","txId":"00f0e1150e64bfe0e90d54a44943954dbd0a4a4602e9c739c19a5bd3bb6c851b60","outputs":1,"per":"75000000","buildMs":156,"proveMs":17165,"submitMs":1172,"retries":0,"submitWait":"Submitted","total_ms":18493,"t":"2026-08-28T20:53:09.712Z"}
+{"phase":"churn","wallet":"w010","txId":"001444fb9c86724d42e273625f85f8f7fca04bfa8870d71145b30cb3132f61ca1f","outputs":1,"per":"8","buildMs":159,"proveMs":17474,"submitMs":1242,"retries":0,"submitWait":"Submitted","total_ms":18875,"t":"2026-08-28T20:53:10.259Z"}
+{"phase":"churn","wallet":"w008","txId":"00470cb1f8860f96528662fab9a1057c40003532cc00843b61c55414a5ac9814dc","outputs":1,"per":"8","buildMs":171,"proveMs":17602,"submitMs":1167,"retries":0,"submitWait":"Submitted","total_ms":18940,"t":"2026-08-28T20:53:13.561Z"}
+{"phase":"churn","wallet":"w004","txId":"0093274dc22a0e5a8db94645edb4232260d5539705f955ce7a6a7a35fcda89c7ab","outputs":1,"per":"208333333","buildMs":168,"proveMs":17497,"submitMs":1632,"retries":0,"submitWait":"Submitted","total_ms":19297,"t":"2026-08-28T20:53:14.430Z"}
+{"phase":"churn","wallet":"w005","txId":"00c78a1168a7a2cdbac26d28ff8cf47cbfbffe3c6e9dff23eb5c1fe419a4d43ada","outputs":1,"per":"208333333","buildMs":174,"proveMs":17703,"submitMs":1173,"retries":0,"submitWait":"Submitted","total_ms":19050,"t":"2026-08-28T20:53:17.312Z"}
+{"phase":"churn","wallet":"w001","txId":"00f12a2bb2662d2ab02c476a2d88af5d251d2dc36f07b034ec068c6eefaad2ad92","outputs":1,"per":"5","buildMs":163,"proveMs":17579,"submitMs":1174,"retries":0,"submitWait":"Submitted","total_ms":18917,"t":"2026-08-28T20:53:17.838Z"}
+{"phase":"churn","wallet":"w009","txId":"00e4e3167cf2dc0cb26f812999ed5ab4a065274b30c29245bd8ba722e821bef9b3","outputs":1,"per":"208333333","buildMs":173,"proveMs":17644,"submitMs":1407,"retries":0,"submitWait":"Submitted","total_ms":19224,"t":"2026-08-28T20:53:21.255Z"}
+{"phase":"churn","wallet":"w007","txId":"00134a97d8f143a68257e9c26a1aeee6ac1563918654040f52808efc8c9ad137d5","outputs":1,"per":"8","buildMs":166,"proveMs":17654,"submitMs":1159,"retries":0,"submitWait":"Submitted","total_ms":18979,"t":"2026-08-28T20:53:21.631Z"}
+{"phase":"churn","wallet":"w006","txId":"003789b9f5d1d7256b887bf43ade7f9fc9516c394584f00a106bd2a67c09d9b76a","outputs":1,"per":"208333333","buildMs":160,"proveMs":17677,"submitMs":1159,"retries":0,"submitWait":"Submitted","total_ms":18996,"t":"2026-08-28T20:53:24.945Z"}
+{"phase":"churn","wallet":"w003","txId":"004509deffc13729120ab47998c6c5f484a55857563a8c1a0d0d3e10410041e9c5","outputs":1,"per":"208333333","buildMs":169,"proveMs":17653,"submitMs":1173,"retries":0,"submitWait":"Submitted","total_ms":18995,"t":"2026-08-28T20:53:25.361Z"}
+{"phase":"churn","wallet":"w002","txId":"0065eb4ea9a6928bfe1121a33c126fa0eb9348abb875e18ed25e404c79b42ef8e9","outputs":1,"per":"75000000","buildMs":175,"proveMs":17691,"submitMs":1176,"retries":0,"submitWait":"Submitted","total_ms":19042,"t":"2026-08-28T20:53:28.758Z"}
+{"phase":"churn","wallet":"w010","txId":"0029d7eb36a8ad3579c7091804327d31b6bd331ea122772d2ee4e68621e8663c2f","outputs":1,"per":"208333333","buildMs":169,"proveMs":17522,"submitMs":1212,"retries":0,"submitWait":"Submitted","total_ms":18903,"t":"2026-08-28T20:53:29.166Z"}
+{"phase":"churn","wallet":"w008","txId":"00216913f6c23bb7ddb94a6e2de4162b023193a9a5af9119e6690d77c08c22b73c","outputs":1,"per":"208333333","buildMs":174,"proveMs":17574,"submitMs":1168,"retries":0,"submitWait":"Submitted","total_ms":18916,"t":"2026-08-28T20:53:32.481Z"}
+{"phase":"churn","wallet":"w004","txId":"00b7532911cf1d23568d5fc92a6312707ce77f76ef23f0ec0b9f8d74830d255721","outputs":1,"per":"8","buildMs":713,"proveMs":16712,"submitMs":1168,"retries":0,"submitWait":"Submitted","total_ms":18593,"t":"2026-08-28T20:53:33.024Z"}
+{"phase":"churn","wallet":"w005","txId":"0059aa1a5c0157a1c249c5da09d6bd2dab757bb679262118500da90838a353cc5a","outputs":1,"per":"8","buildMs":167,"proveMs":17515,"submitMs":1217,"retries":0,"submitWait":"Submitted","total_ms":18899,"t":"2026-08-28T20:53:36.215Z"}
+{"phase":"churn","wallet":"w001","txId":"0036402b46f82f6eb7bca2e32dfd682a18c1fbaab4527b8b1226315fdd858e062f","outputs":1,"per":"5","buildMs":166,"proveMs":17611,"submitMs":1173,"retries":0,"submitWait":"Submitted","total_ms":18950,"t":"2026-08-28T20:53:36.793Z"}
+{"phase":"churn","wallet":"w009","txId":"00a31f06376db0cf8d2a36a7183d0cac8a1ebbe054576811e86759a071b7dd7797","outputs":1,"per":"8","buildMs":179,"proveMs":17378,"submitMs":1214,"retries":0,"submitWait":"Submitted","total_ms":18771,"t":"2026-08-28T20:53:40.028Z"}
+{"phase":"churn","wallet":"w007","txId":"0041785ac7aed422e5c6686b2b48f7b69756b3254609af47f2222ab700c883f5c9","outputs":1,"per":"208333333","buildMs":166,"proveMs":17609,"submitMs":1167,"retries":0,"submitWait":"Submitted","total_ms":18942,"t":"2026-08-28T20:53:40.577Z"}
+{"phase":"churn","wallet":"w006","txId":"004c255ae30f6cd21eb03a29d35e6042913b3313e5a604fb638aeb0438caf369c7","outputs":1,"per":"8","buildMs":160,"proveMs":17473,"submitMs":1161,"retries":0,"submitWait":"Submitted","total_ms":18794,"t":"2026-08-28T20:53:43.743Z"}
+{"phase":"churn","wallet":"w003","txId":"00a54dcfe517f8d7e7db951a45c10d3df8d9cb511c31ae92e840a1848c75700fe5","outputs":1,"per":"208333333","buildMs":173,"proveMs":17649,"submitMs":1448,"retries":0,"submitWait":"Submitted","total_ms":19270,"t":"2026-08-28T20:53:44.635Z"}
+{"phase":"churn","wallet":"w002","txId":"004901b767cdc57b6ed44ef8e34593a1d9bdd586a2e915a01ff46fff0a5d50c309","outputs":1,"per":"75000000","buildMs":167,"proveMs":17586,"submitMs":1170,"retries":0,"submitWait":"Submitted","total_ms":18923,"t":"2026-08-28T20:53:47.686Z"}
+{"phase":"churn","wallet":"w010","txId":"00dc4c53a3a82a95274642c78f2bf634fbef38997265f9a4863344d78b8655d385","outputs":1,"per":"8","buildMs":172,"proveMs":17574,"submitMs":1171,"retries":0,"submitWait":"Submitted","total_ms":18917,"t":"2026-08-28T20:53:48.088Z"}
+{"phase":"churn","wallet":"w008","txId":"0060ed27a4d915f16be74dd50f22481eab691158b8120ef886d0a2faa3956de96f","outputs":1,"per":"208333333","buildMs":175,"proveMs":17679,"submitMs":1210,"retries":0,"submitWait":"Submitted","total_ms":19064,"t":"2026-08-28T20:53:51.550Z"}
+{"phase":"churn","wallet":"w005","txId":"00010226b2e88f8b7669068419ed69ddba1565a5133ac4c59307257d1429ddfc6a","outputs":1,"per":"208333333","buildMs":160,"proveMs":17643,"submitMs":1175,"retries":0,"submitWait":"Submitted","total_ms":18978,"t":"2026-08-28T20:53:55.197Z"}
+{"phase":"churn","wallet":"w001","txId":"00ad7652f26739c3da43a134d6455413706fe64abb5ede89c48fe9c2866f8f4f45","outputs":1,"per":"5","buildMs":175,"proveMs":17700,"submitMs":1175,"retries":0,"submitWait":"Submitted","total_ms":19050,"t":"2026-08-28T20:53:55.848Z"}
+{"phase":"churn","wallet":"w009","txId":"000070eabb94c60bfba5b37940b28e6258c10444a5780af2ac05a13596315f7f5d","outputs":1,"per":"208333333","buildMs":165,"proveMs":17727,"submitMs":1221,"retries":0,"submitWait":"Submitted","total_ms":19113,"t":"2026-08-28T20:53:59.147Z"}
+{"phase":"churn","wallet":"w007","txId":"00ba7d1b6e9aa047e8ec38f2ef811688b8f7d59c25932d832f65d2b4b4c8be61e4","outputs":1,"per":"8","buildMs":165,"proveMs":17717,"submitMs":1169,"retries":0,"submitWait":"Submitted","total_ms":19051,"t":"2026-08-28T20:53:59.633Z"}
+{"phase":"churn","wallet":"w003","txId":"00be7038fb01a49faa3fff48b2ff26f63978d7de2f5df8819e457991135e425be6","outputs":1,"per":"8","buildMs":157,"proveMs":17445,"submitMs":1165,"retries":0,"submitWait":"Submitted","total_ms":18767,"t":"2026-08-28T20:54:03.404Z"}
+{"phase":"churn","wallet":"w002","txId":"00b9858e20a02d3b1f35e3593d6007b27928d1e061e4a7702d6f5229521afa8d1b","outputs":1,"per":"75000000","buildMs":166,"proveMs":17587,"submitMs":1203,"retries":0,"submitWait":"Submitted","total_ms":18956,"t":"2026-08-28T20:54:06.647Z"}
+{"phase":"churn","wallet":"w010","txId":"0075153f92f82d973989972fc5ecfd9a7c896c24409b98a803aed2f56214c58b06","outputs":1,"per":"208333333","buildMs":182,"proveMs":18097,"submitMs":1163,"retries":0,"submitWait":"Submitted","total_ms":19442,"t":"2026-08-28T20:54:07.535Z"}
+{"phase":"churn","wallet":"w008","txId":"0073cfbc5f31c441ac3f123ce9b7b1335385ab717324d621a9edbacc55f1c68b21","outputs":1,"per":"8","buildMs":175,"proveMs":17413,"submitMs":1161,"retries":0,"submitWait":"Submitted","total_ms":18749,"t":"2026-08-28T20:54:10.301Z"}
+{"phase":"churn","wallet":"w004","txId":"005852bbee707caeebf24141aceb8dd7216283ad809daad10b849775f9a3ebdd26","outputs":1,"per":"208333333","buildMs":171,"proveMs":16552,"submitMs":1171,"retries":1,"submitWait":"Submitted","total_ms":38356,"t":"2026-08-28T20:54:11.385Z"}
+{"phase":"churn","wallet":"w005","txId":"0070ae6eef4f8d1aec50ba7cc7d468cca61b404a6137dca0eee5175d7250112ab1","outputs":1,"per":"208333333","buildMs":165,"proveMs":17607,"submitMs":1571,"retries":0,"submitWait":"Submitted","total_ms":19343,"t":"2026-08-28T20:54:14.545Z"}
+{"phase":"churn","wallet":"w001","txId":"00bd40c3695479a7b2d0f2f71bbd430fae2f81f7f43ad5aad916be2a46c6248ba6","outputs":1,"per":"13","buildMs":163,"proveMs":18010,"submitMs":1162,"retries":0,"submitWait":"Submitted","total_ms":19335,"t":"2026-08-28T20:54:15.189Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:54:15.541Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:54:15.896Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:54:16.252Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:54:16.608Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:54:16.966Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":350,"t":"2026-08-28T20:54:17.322Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":353,"t":"2026-08-28T20:54:17.681Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:54:18.037Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:54:18.389Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":355,"t":"2026-08-28T20:54:18.750Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":353,"t":"2026-08-28T20:54:19.109Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:54:19.465Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":593,"t":"2026-08-28T20:54:20.063Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":338,"t":"2026-08-28T20:54:20.403Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":346,"t":"2026-08-28T20:54:20.751Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":355,"t":"2026-08-28T20:54:21.112Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:54:21.467Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":350,"t":"2026-08-28T20:54:21.819Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:54:22.172Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":350,"t":"2026-08-28T20:54:22.524Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:54:22.878Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":353,"t":"2026-08-28T20:54:23.237Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":341,"t":"2026-08-28T20:54:23.585Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":353,"t":"2026-08-28T20:54:23.945Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:54:24.299Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:54:24.653Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:54:25.015Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:54:25.375Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":347,"t":"2026-08-28T20:54:25.726Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":346,"t":"2026-08-28T20:54:26.074Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:54:26.437Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":765,"t":"2026-08-28T20:54:27.208Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:54:27.563Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:54:27.917Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":350,"t":"2026-08-28T20:54:28.273Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":341,"t":"2026-08-28T20:54:28.621Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":340,"t":"2026-08-28T20:54:28.967Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":355,"t":"2026-08-28T20:54:29.328Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":358,"t":"2026-08-28T20:54:29.688Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:54:30.049Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:54:30.410Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:54:30.764Z"}
+{"phase":"churn","wallet":"w001","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:54:30.911Z"}
+{"phase":"churn","wallet":"w001","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:54:31.073Z"}
+{"phase":"churn","wallet":"w001","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:54:31.228Z"}
+{"phase":"churn","wallet":"w001","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:54:31.381Z"}
+{"phase":"churn","wallet":"w001","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:54:31.539Z"}
+{"phase":"churn","wallet":"w001","error":"Encountered unexpected error: Forbidden","total_ms":346,"t":"2026-08-28T20:54:32.490Z"}
+{"phase":"churn","wallet":"w012","timeout":"stage 'submit' exceeded 180000ms","total_ms":187600,"t":"2026-08-28T20:55:16.890Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":355,"t":"2026-08-28T20:55:17.250Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":351,"t":"2026-08-28T20:55:17.604Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":360,"t":"2026-08-28T20:55:17.969Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:55:18.323Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":350,"t":"2026-08-28T20:55:18.676Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:55:19.027Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":357,"t":"2026-08-28T20:55:19.389Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":353,"t":"2026-08-28T20:55:19.748Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":350,"t":"2026-08-28T20:55:20.103Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":344,"t":"2026-08-28T20:55:20.452Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:55:20.807Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:55:21.163Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:55:21.517Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":347,"t":"2026-08-28T20:55:21.866Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":342,"t":"2026-08-28T20:55:22.213Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:55:22.565Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:55:22.926Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:55:23.282Z"}
+{"phase":"churn","wallet":"w012","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:55:23.632Z"}
+{"phase":"churn","wallet":"w012","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:23.795Z"}
+{"phase":"churn","wallet":"w012","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:23.948Z"}
+{"phase":"churn","wallet":"w012","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:24.092Z"}
+{"phase":"churn","wallet":"w012","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:24.236Z"}
+{"phase":"churn","wallet":"w012","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:24.392Z"}
+{"phase":"churn","wallet":"w011","timeout":"stage 'submit' exceeded 180000ms","total_ms":205347,"t":"2026-08-28T20:55:34.638Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":347,"t":"2026-08-28T20:55:34.988Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":353,"t":"2026-08-28T20:55:35.347Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":340,"t":"2026-08-28T20:55:35.690Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":356,"t":"2026-08-28T20:55:36.051Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:55:36.407Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":347,"t":"2026-08-28T20:55:36.759Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:55:37.114Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":348,"t":"2026-08-28T20:55:37.466Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":349,"t":"2026-08-28T20:55:37.820Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":358,"t":"2026-08-28T20:55:38.184Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":342,"t":"2026-08-28T20:55:38.531Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":351,"t":"2026-08-28T20:55:38.887Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":358,"t":"2026-08-28T20:55:39.252Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:55:39.609Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":353,"t":"2026-08-28T20:55:39.966Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":354,"t":"2026-08-28T20:55:40.326Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":347,"t":"2026-08-28T20:55:40.676Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":352,"t":"2026-08-28T20:55:41.032Z"}
+{"phase":"churn","wallet":"w011","error":"Encountered unexpected error: Forbidden","total_ms":350,"t":"2026-08-28T20:55:41.388Z"}
+{"phase":"churn","wallet":"w011","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:41.544Z"}
+{"phase":"churn","wallet":"w011","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:41.692Z"}
+{"phase":"churn","wallet":"w011","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:41.847Z"}
+{"phase":"churn","wallet":"w011","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:42.001Z"}
+{"phase":"churn","wallet":"w011","resplitFailed":"[e] Encountered unexpected error: Forbidden  name=(FiberFailure) Wallet.Other | [e].effect _tag=Fail | [e].effect.error Encountered unexpected error: Forbidden ","t":"2026-08-28T20:55:42.144Z"}
+{"phase":"churn","wallet":"w009","timeout":"stage 'submit' exceeded 180000ms","total_ms":197576,"t":"2026-08-28T20:57:16.725Z"}
+{"phase":"churn","wallet":"w007","timeout":"stage 'submit' exceeded 180000ms","total_ms":198384,"t":"2026-08-28T20:57:18.021Z"}
+{"phase":"churn","wallet":"w003","timeout":"stage 'submit' exceeded 180000ms","total_ms":197172,"t":"2026-08-28T20:57:20.581Z"}
+{"phase":"churn","wallet":"w006","timeout":"stage 'submit' exceeded 180000ms","total_ms":217959,"t":"2026-08-28T20:57:21.707Z"}
+{"phase":"churn","wallet":"w002","timeout":"stage 'submit' exceeded 180000ms","total_ms":198296,"t":"2026-08-28T20:57:24.949Z"}
+{"phase":"churn","wallet":"w010","timeout":"stage 'submit' exceeded 180000ms","total_ms":197827,"t":"2026-08-28T20:57:25.366Z"}
+{"phase":"churn","wallet":"w008","timeout":"stage 'submit' exceeded 180000ms","total_ms":198438,"t":"2026-08-28T20:57:28.743Z"}
+{"phase":"churn","wallet":"w004","timeout":"stage 'submit' exceeded 180000ms","total_ms":197976,"t":"2026-08-28T20:57:29.365Z"}
+{"phase":"churn","wallet":"w005","timeout":"stage 'submit' exceeded 180000ms","total_ms":196735,"t":"2026-08-28T20:57:31.282Z"}

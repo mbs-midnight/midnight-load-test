@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Midnight's Capacity Ceiling</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;450;500;600;700&display=swap">
+<style>
+:root{
+  --surface-0:#f4f4f2; --surface-1:#fcfcfb; --surface-2:#ececea; --rule:#dcdcd6;
+  --ink:#111110; --ink-2:#52514e; --ink-3:#7c7b75;
+  --series:#2a78d6; --series-soft:#e2ecfa;
+  --ceiling:#d03b3b;
+  --measure:70ch;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --surface-0:#121211; --surface-1:#1a1a19; --surface-2:#242422; --rule:#33332f;
+  --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#8d8c84;
+  --series:#3987e5; --series-soft:#182a41;
+  --ceiling:#d03b3b;
+}}
+:root[data-theme="dark"]{
+  --surface-0:#121211; --surface-1:#1a1a19; --surface-2:#242422; --rule:#33332f;
+  --ink:#ffffff; --ink-2:#c3c2b7; --ink-3:#8d8c84;
+  --series:#3987e5; --series-soft:#182a41;
+  --ceiling:#d03b3b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px 88px}
+h1{font-size:clamp(2rem,4.6vw,2.9rem);line-height:1.1;font-weight:700;letter-spacing:-.022em;
+  text-wrap:balance;margin:0 0 .4rem}
+h2{font-size:1.32rem;font-weight:600;letter-spacing:-.012em;text-wrap:balance;
+  margin:56px 0 6px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+h3{font-size:1rem;font-weight:600;margin:28px 0 6px;text-wrap:balance}
+p,li{max-width:var(--measure);color:var(--ink-2)}
+p{margin:0 0 .9rem}
+ul{margin:0 0 1rem;padding-left:1.15rem}li{margin-bottom:.35rem}
+b,strong{color:var(--ink);font-weight:600}
+code,.n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+code{font-size:.86em;background:var(--surface-2);padding:.1em .34em;border-radius:3px;color:var(--ink)}
+header{padding:64px 0 6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--series);margin-bottom:16px}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:62ch;margin:0 0 26px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 26px;font-family:"IBM Plex Mono",monospace;
+  font-size:.75rem;color:var(--ink-3);border-top:1px solid var(--rule);padding-top:14px}
+
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:5px;overflow:hidden;margin:30px 0 6px}
+.hero div{background:var(--surface-1);padding:18px 20px}
+.hero .v{font-family:"IBM Plex Mono",monospace;font-size:1.7rem;font-weight:600;
+  color:var(--series);font-variant-numeric:tabular-nums;line-height:1.05}
+.hero .k{font-size:.78rem;color:var(--ink-3);margin-top:7px}
+.caption{font-size:.8rem;color:var(--ink-3);margin:8px 0 0;max-width:var(--measure)}
+
+pre{background:var(--surface-1);border:1px solid var(--rule);border-radius:5px;padding:15px 17px;
+  overflow-x:auto;font-family:"IBM Plex Mono",monospace;font-size:.82rem;line-height:1.6;margin:18px 0;
+  color:var(--ink)}
+pre b{color:var(--series)}
+
+.scroll{overflow-x:auto;margin:20px 0;border:1px solid var(--rule);border-radius:5px;background:var(--surface-1)}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th{text-align:left;font-weight:600;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);padding:11px 13px;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:9px 13px;border-bottom:1px solid var(--rule);vertical-align:middle;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.n,th.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+td.hi{color:var(--ink);font-weight:600}
+td.dim{color:var(--ink-3)}
+
+/* ---- dimension profile: 5 bars per shape, one hue, ceiling at 100% ---- */
+.prof{border:1px solid var(--rule);border-radius:5px;background:var(--surface-1);margin:20px 0;overflow:hidden}
+.prow{display:grid;grid-template-columns:minmax(190px,1.2fr) 3fr minmax(112px,auto);
+  gap:0 18px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--rule)}
+.prow:last-child{border-bottom:0}
+.pname{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--ink)}
+.pname .sub{display:block;color:var(--ink-3);font-size:.72rem;margin-top:2px;line-height:1.45}
+.bars{display:flex;flex-direction:column;gap:5px;min-width:0}
+.bar{display:grid;grid-template-columns:104px 1fr;gap:9px;align-items:center}
+.blab{font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--ink-3);text-align:right}
+.track{position:relative;height:13px;background:var(--surface-2);border-radius:3px}
+.fill{position:absolute;left:0;top:0;bottom:0;background:var(--series);
+  border-radius:0 3px 3px 0;min-width:2px}
+.fill[data-binds="1"]{box-shadow:0 0 0 2px var(--surface-1)}
+.val{position:absolute;top:-1px;font-family:"IBM Plex Mono",monospace;font-size:.7rem;
+  color:var(--ink-2);white-space:nowrap;line-height:15px}
+.binds{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.62rem;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--surface-1);background:var(--ink);
+  padding:1px 6px;border-radius:3px;margin-left:7px;vertical-align:1px}
+.pcap{text-align:right}
+.pcap .tps{font-family:"IBM Plex Mono",monospace;font-size:1.18rem;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.pcap .sub{font-size:.72rem;color:var(--ink-3);margin-top:2px}
+.ceilnote{display:flex;align-items:center;gap:8px;padding:11px 18px;background:var(--surface-2);
+  font-size:.76rem;color:var(--ink-2);border-bottom:1px solid var(--rule)}
+.ceilnote i{display:inline-block;width:26px;height:0;border-top:2px dashed var(--ceiling)}
+
+.note{background:var(--surface-1);border:1px solid var(--rule);border-left:3px solid var(--series);
+  border-radius:0 5px 5px 0;padding:15px 19px;margin:22px 0}
+.note p{margin:0;max-width:none;font-size:.95rem}
+.note p+p{margin-top:.6rem}
+.foot{margin-top:64px;padding-top:18px;border-top:1px solid var(--rule);
+  font-size:.79rem;color:var(--ink-3)}
+.tip{position:fixed;z-index:9;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--surface-1);font-family:"IBM Plex Mono",monospace;
+  font-size:.72rem;padding:5px 8px;border-radius:4px;white-space:nowrap}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Capacity analysis &middot; mainnet, preview &amp; stagenet</div>
+  <h1>Midnight's Capacity Ceiling</h1>
+  <p class="lede">Assume unlimited wallets, DUST, provers and submitters. What is the chain's maximum
+  throughput? There is no single answer &mdash; across 1,334 costed transactions, capacity varies
+  <b>89&times;</b> with transaction shape, because five independent cost dimensions compete to bind
+  first, and which one wins depends on what the transaction does.</p>
+  <div class="meta">
+    <span>1,334 transactions costed</span>
+    <span>block time 6.000 s</span>
+    <span>limits identical on all three networks</span>
+    <span>costs from <code>Transaction.cost(params)</code></span>
+  </div>
+</header>
+
+<div class="hero">
+  <div><div class="v">24.9</div><div class="k">TPS, best measured shape (a 6,772 B contract call)</div></div>
+  <div><div class="v">16.7</div><div class="k">TPS, plain unshielded transfer</div></div>
+  <div><div class="v">0.28</div><div class="k">TPS, contract deployments</div></div>
+  <div><div class="v">3 of 5</div><div class="k">dimensions that ever bind</div></div>
+</div>
+<p class="caption">Ledger-level capacity only. Excludes mempool ingest, networking and consensus
+propagation &mdash; see assumptions.</p>
+
+<h2>How capacity is computed</h2>
+<p>A block is full when <em>any</em> one of five cost dimensions reaches its limit; overall fullness is
+the maximum across them. So a transaction shape's capacity is set by whichever dimension it exhausts
+first, and the chain's throughput is that count divided by the block time:</p>
+
+<pre><code>capacity(shape) = <b>min</b>  ( limit&#8202;<sub>d</sub> / cost&#8202;<sub>d</sub>(shape) )   over d in the five dimensions
+                  d
+
+TPS(shape)      = capacity(shape) / 6.000 s</code></pre>
+
+<div class="scroll"><table>
+  <thead><tr><th>Dimension</th><th class="n">Block limit</th><th class="n">Genesis default</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>read_time</code></td><td class="n">2.000 s</td><td class="n dim">1.000 s</td><td>I/O read budget per block</td></tr>
+    <tr><td><code>compute_time</code></td><td class="n">2.000 s</td><td class="n dim">1.000 s</td><td>validation compute is scaled down before it counts (see below)</td></tr>
+    <tr><td><code>block_usage</code></td><td class="n">1,000,000 B</td><td class="n dim">200,000 B</td><td>bytes on the wire &mdash; a transaction's serialized size less about 67 B</td></tr>
+    <tr><td class="hi"><code>bytes_written</code></td><td class="n hi">50,000 B</td><td class="n dim">50,000 B</td><td>persistent state growth &mdash; <b>20&times; tighter than block_usage</b></td></tr>
+    <tr><td><code>bytes_churned</code></td><td class="n">50,000,000 B</td><td class="n dim">1,000,000 B</td><td>temporary storage</td></tr>
+  </tbody>
+</table></div>
+<p>The block limits are the live values decoded from each network's <code>ledgerParameters</code> on
+3 September 2026 (mainnet block 2,425,496; preview 709,097; stagenet 305,299), and they are
+<b>identical on all three networks</b>. They differ from the genesis defaults compiled into the SDK
+(<code>LedgerParameters.initialParameters()</code>): read and compute budgets are doubled,
+<code>block_usage</code> is 5&times; larger and <code>bytes_churned</code> 50&times; larger. Only
+<code>bytes_written</code> was left at its default, which is why it is now the tightest limit.</p>
+
+<h2>What each transaction shape actually costs</h2>
+<p>Each row is one real transaction, downloaded from the network it ran on, rebuilt locally with the
+matching ledger library and costed against that network's live parameters. Bars are the fraction of
+each block limit that one transaction consumes; the track is the whole block. Most bars are barely
+visible on purpose &mdash; that is the finding.</p>
+
+<div class="prof" id="prof">
+  <div class="ceilnote"><i></i> track = one full block. The tallest bar sets capacity; every other
+  dimension has headroom to spare.</div>
+</div>
+
+<div class="note">
+  <p><b>Two dimensions never bind.</b> Across 1,334 transactions, <code>read_time</code> peaks at
+  <b>4.7%</b> of a block and <code>bytes_churned</code> at <b>1.5%</b>. <code>compute_time</code>
+  peaks at <b>12.4%</b> (a 68-output shielded transfer) and is the binding dimension for only
+  <b>11 transactions</b>, all small contract calls whose three cheapest dimensions sit within a hair of
+  each other. Everything else is bound by <code>block_usage</code> (748 transactions) or
+  <code>bytes_written</code> (575).</p>
+  <p>At the ledger level Midnight is neither CPU-bound nor I/O-bound. Faster validators or more cores
+  do not move the ceiling.</p>
+</div>
+
+<h2>Throughput by shape</h2>
+<p>Same data, ordered by capacity. "Midnight's TPS" is not a property of the chain so much as of what
+you ask it to do.</p>
+<div class="prof" id="tps"></div>
+
+<h2>Where the ceiling is</h2>
+<p><b>Contract calls are bound by bytes on the wire.</b> A call carries a zero-knowledge proof, so the
+smallest call observed anywhere is 6,571 B, and the lightest calls write only 320 B of state. Their
+capacity is set by <code>block_usage</code>: <b>149 per block, 24.9 TPS</b> on preview; 141 per block
+on stagenet; 122 per block on mainnet, where the dominant contract's calls are a little larger. Of
+769 calls costed, <code>block_usage</code> binds 621.</p>
+
+<p><b>Plain transfers are bound by state writes, not size.</b> A one-input, two-output unshielded
+transfer is about 3,800 B and uses 0.37% of <code>block_usage</code> &mdash; room for 267 per block
+on size alone &mdash; but every UTXO it creates is written to the ledger's nullifier and commitment
+structures. The write cost is 500 B when the offer sits in the transaction's <em>guaranteed</em>
+segment and 1,068 B when it sits in the <em>fallible</em> segment, which is what caps transfers at
+<b>100 per block (16.7 TPS)</b> or <b>47 per block (7.8 TPS)</b>. The transfers observed on mainnet
+were built guaranteed; every one observed on preview and stagenet was built fallible.</p>
+
+<p><b>Deployments are bound by writes overwhelmingly.</b> A contract deployment writes roughly its own
+size into state: 19,027 B for a 22,158 B deploy, 29,727 B for a 29,503 B one. That is 38&ndash;59% of
+the write budget per transaction, so a block holds <b>1.7 to 2.6 deployments</b>.</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Shape</th><th class="n">Per block</th><th class="n">TPS</th><th>Bound by</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td class="hi">Lightest contract call (6,772 B, 320 B written)</td><td class="n hi">149</td><td class="n hi">24.9</td><td><code>block_usage</code></td><td>proof size; writes and compute both have 33% headroom</td></tr>
+    <tr><td>Contract call, mainnet's dominant contract (8,275 B)</td><td class="n">122</td><td class="n">20.3</td><td><code>block_usage</code></td><td>same shape, ~1.5 KB larger</td></tr>
+    <tr><td>Unshielded transfer, guaranteed segment</td><td class="n">100</td><td class="n">16.7</td><td><code>bytes_written</code></td><td>500 B written per transfer</td></tr>
+    <tr><td>DUST registration (715 B)</td><td class="n">93</td><td class="n">15.6</td><td><code>bytes_written</code></td><td>536 B written; the smallest shape seen on any network (642 B on preview)</td></tr>
+    <tr><td>Unshielded transfer, fallible segment</td><td class="n">47</td><td class="n">7.8</td><td><code>bytes_written</code></td><td>1,068 B written per transfer</td></tr>
+    <tr><td>Shielded transfer, 2 outputs (71,582 B)</td><td class="n">14</td><td class="n">2.3</td><td><code>block_usage</code></td><td>shielded proofs are ~70 KB</td></tr>
+    <tr><td>Contract deployment</td><td class="n">1.7&ndash;2.6</td><td class="n">0.28&ndash;0.44</td><td><code>bytes_written</code></td><td>writes its own size into state</td></tr>
+  </tbody>
+</table></div>
+
+<p>If a transaction could be made arbitrarily small, <code>compute_time</code> would become the
+binding dimension: the lowest compute cost of any contract call is 0.455% of a block, giving
+<b>220 per block, 36.6 TPS</b>. That is the hard upper bound of the current parameters, and it is
+unreachable while a call needs a 6.5 KB proof.</p>
+
+<h2>Differences between the three networks</h2>
+<p>Capacity is the same on all three; the traffic and the ledger version are not.</p>
+<ul>
+  <li><b>Block limits: identical.</b> All five limits match exactly on mainnet, preview and stagenet.</li>
+  <li><b>Per-operation cost model: identical.</b> The runtime cost table (157 of 168 parameter fields)
+  matches across all three, so the same shape costs the same everywhere. Mainnet and preview both run
+  ledger&nbsp;8; stagenet runs ledger&nbsp;9, whose cost model drops <code>parallelism_factor: 4</code>
+  (ledger&nbsp;8 divides validation compute by it) and instead exposes <code>validation_factor: 0.25</code>,
+  and adds <code>max_contract_metadata_size: 10,485,760</code>. The measured compute percentages are what
+  each network's node enforces, so no adjustment is applied here.</li>
+  <li><b>Fee prices: different, but irrelevant to capacity.</b> Mainnet and preview sit at the DUST fee floor
+  (<code>overall_price</code> = 5.42&times;10<sup>&minus;18</sup>); stagenet's ledger&nbsp;9 adds
+  <code>min_block_price: 10</code> and holds at 10. Prices scale fees, not block limits.</li>
+  <li><b>Block time.</b> Over the last 1,000 blocks: mainnet 6.000 s, stagenet 6.000 s, preview 6.018 s.</li>
+  <li><b>Observed traffic.</b> Mainnet's last 6,000 blocks held 112 fee-paying transactions: 111 calls to one
+  contract and a single transfer. Preview held 648 (344 calls, 152 deployments, 62 transfers, 90 multi-call
+  transactions). Stagenet held 562 plus 12 of our own. The heaviest single transaction anywhere was ours on
+  stagenet, at 56.9% of <code>block_usage</code>; the heaviest third-party transaction was a stagenet deployment
+  at 59.5% of <code>bytes_written</code>. Nothing on mainnet exceeded 1.6% of the compute budget or 11.9% of any
+  budget.</li>
+  <li><b>Transfer construction.</b> The mainnet wallet places the UTXO offer in the guaranteed segment (500 B
+  written); the preview and stagenet wallets place it in the fallible segment (1,068 B). That halves transfer
+  capacity on the test networks relative to mainnet. It is a wallet choice, not a chain parameter.</li>
+</ul>
+
+<h2>What would raise the ceiling</h2>
+<ul>
+  <li><b>Raise <code>bytes_written</code>.</b> At 50,000 B it is the one limit still at its genesis
+  default and the tightest on the chain by a factor of 20. It is what caps transfers at 47&ndash;100 per
+  block and deployments at 1.7&ndash;2.6, and it is the binding dimension for 575 of 1,334 transactions.</li>
+  <li><b>Raise <code>block_usage</code> to lift contract calls.</b> Calls are bound by size, not writes;
+  the lightest ones have 33% headroom on both <code>bytes_written</code> and <code>compute_time</code>
+  before either would bind.</li>
+  <li><b>Build transfers in the guaranteed segment.</b> Same transaction, half the write cost: 100 per
+  block instead of 47. Wallet-side, no protocol change.</li>
+  <li><b>Nothing about proving or validation speed.</b> Compute peaks at 12.4%, read at 4.7%. Faster
+  validators or more cores do not move the ledger-level ceiling.</li>
+</ul>
+
+<h2>Assumptions</h2>
+<ul>
+  <li><b>Unlimited external resources</b>, as posed: wallets, DUST, provers, bandwidth and submitters
+  are not constraints here. Real single-client throughput measured far lower on preview &mdash;
+  1.9 tx/s at the mempool &mdash; and a wallet can have one transaction in flight per NIGHT UTXO it holds
+  (pending DUST is tracked per DUST UTXO; verified on stagenet with six UTXOs and six pre-proved transactions).</li>
+  <li><b>Ledger limits only.</b> Excludes mempool ingest, peer networking, block propagation and
+  consensus. Any of those could bind before the ledger does.</li>
+  <li><b>Homogeneous blocks</b> &mdash; every transaction in the block is the same shape. A mixed block
+  is a weighted version of the same minimum; one deployment mixed into a block of transfers takes
+  38&ndash;59% of the write budget immediately.</li>
+  <li><b>Block time 6.000 s</b>, measured over the last 1,000 blocks on mainnet and stagenet, and across
+  499 consecutive intervals during the preview load test, all within 1 ms.</li>
+  <li><b>Every number is measured, not modeled</b>, except the compute-bound 220-per-block bound, which
+  assumes a transaction of zero size and is stated as unreachable. The lightest shape is the lightest
+  <em>observed</em>; a smaller contract call could exist, but not one under ~6.5 KB while it carries a proof.</li>
+</ul>
+
+<div class="foot">
+  Costs computed with <code>Transaction.cost(params)</code> on every regular transaction in the last
+  6,000 blocks of each network on 3 September 2026: mainnet blocks 2,419,528&ndash;2,425,528 (ledger-v8
+  8.1.0), preview 703,129&ndash;709,129 (ledger-v8), stagenet 298,835&ndash;304,835 plus 12 of our own
+  earlier transactions (ledger-v9 1.0.0-rc.3). Limits and cost models decoded from each network's live
+  per-block <code>ledgerParameters</code>. 1,334 transactions, zero deserialization failures.
+</div>
+</div>
+
+<div class="tip" id="tip"></div>
+<script>
+const DIMS = ['read_time','compute_time','block_usage','bytes_written','bytes_churned'];
+const LIM  = {read_time:'2.000 s',compute_time:'2.000 s',block_usage:'1,000,000 B',
+              bytes_written:'50,000 B',bytes_churned:'50,000,000 B'};
+// [label, sublabel, read, compute, block_usage, bytes_written, churn]  -- % of each block limit
+const SHAPES = [
+  ['DUST registration','715 B · 1 in / 1 out · stagenet',0.315,0.544,0.065,1.072,0.056],
+  ['Unshielded transfer','3,806 B · 1 in / 2 out, guaranteed · mainnet',0.183,0.273,0.374,1.000,0.048],
+  ['Unshielded transfer','3,820 B · 1 in / 2 out, fallible · stagenet',0.276,0.661,0.375,2.136,0.095],
+  ['Unshielded transfer','4,185 B · 4 in / 40 out · stagenet',2.155,5.915,0.412,30.432,1.240],
+  ['ContractCall','6,772 B · preview',0.305,0.569,0.670,0.640,0.032],
+  ['ContractCall','7,157 B · stagenet',0.303,0.689,0.709,0.648,0.051],
+  ['ContractCall','8,275 B · mainnet',0.259,0.493,0.821,0.640,0.033],
+  ['ContractCall','8,298 B · mainnet',0.448,0.929,0.823,0.640,0.033],
+  ['ContractCall','7,727 B · 5.9 KB state write · mainnet',0.513,1.549,0.766,11.884,0.058],
+  ['3 × ContractCall','51,784 B · preview',0.895,1.974,5.172,4.288,0.147],
+  ['Shielded transfer','71,582 B · 2 outputs · stagenet',0.863,2.403,7.151,5.056,0.302],
+  ['Shielded transfer','265,512 B · 32 outputs · stagenet',2.350,6.386,26.544,9.920,0.802],
+  ['Shielded transfer','569,482 B · 68 outputs · stagenet',4.747,12.423,56.941,17.600,1.520],
+  ['ContractDeploy','22,158 B · preview',0.221,0.385,2.209,38.054,0.045],
+  ['ContractDeploy','29,503 B · stagenet',0.183,0.272,2.943,59.454,0.031],
+];
+const rows = SHAPES.map(([name,sub,...v]) => {
+  const caps = v.map(p => 100/p);
+  const i = caps.indexOf(Math.min(...caps));
+  return {name, sub, v, bindIdx:i, perBlock:caps[i], tps:caps[i]/6};
+});
+
+const fmt = (x,d=2) => x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const prof = document.getElementById('prof');
+for (const r of rows) {
+  const row = document.createElement('div'); row.className = 'prow';
+  const nm = document.createElement('div'); nm.className = 'pname';
+  nm.innerHTML = r.name + '<span class="sub">' + r.sub + '</span>';
+  const bars = document.createElement('div'); bars.className = 'bars';
+  r.v.forEach((p,i) => {
+    const b = document.createElement('div'); b.className = 'bar';
+    const lab = document.createElement('div'); lab.className = 'blab'; lab.textContent = DIMS[i];
+    const tr = document.createElement('div'); tr.className = 'track';
+    const fl = document.createElement('div'); fl.className = 'fill';
+    fl.style.width = Math.max(p,0.15) + '%';
+    if (i === r.bindIdx) fl.dataset.binds = '1';
+    const val = document.createElement('span'); val.className = 'val';
+    val.innerHTML = fmt(p,p<1?3:2) + '%' + (i===r.bindIdx ? '<span class="binds">binds</span>' : '');
+    if (p > 55) { val.style.right = '6px'; val.style.color = 'var(--surface-1)'; }
+    else { val.style.left = 'calc(' + Math.max(p,0.15) + '% + 7px)'; }
+    tr.append(fl,val);
+    tr.dataset.tip = DIMS[i] + ': ' + fmt(p,3) + '% of ' + LIM[DIMS[i]];
+    b.append(lab,tr); bars.append(b);
+  });
+  const cap = document.createElement('div'); cap.className = 'pcap';
+  cap.innerHTML = '<div class="tps">' + fmt(r.tps) + '</div><div class="sub">TPS &middot; ' +
+                  fmt(r.perBlock,1) + ' tx/block</div>';
+  row.append(nm,bars,cap); prof.append(row);
+}
+
+// TPS comparison: single series, sorted, direct-labeled -> no legend needed.
+const tpsWrap = document.getElementById('tps');
+const sorted = [...rows].sort((a,b) => b.tps - a.tps);
+const max = sorted[0].tps;
+for (const r of sorted) {
+  const row = document.createElement('div'); row.className = 'prow';
+  const nm = document.createElement('div'); nm.className = 'pname';
+  nm.innerHTML = r.name + '<span class="sub">' + r.sub + '</span>';
+  const holder = document.createElement('div'); holder.className = 'bars';
+  const b = document.createElement('div'); b.className = 'bar';
+  b.style.gridTemplateColumns = '1fr';
+  const tr = document.createElement('div'); tr.className = 'track'; tr.style.height = '17px';
+  const fl = document.createElement('div'); fl.className = 'fill';
+  fl.style.width = (r.tps / max * 100) + '%';
+  tr.dataset.tip = fmt(r.tps) + ' TPS · ' + fmt(r.perBlock,1) + ' tx/block · binds on ' + DIMS[r.bindIdx];
+  tr.append(fl); b.append(tr); holder.append(b);
+  const cap = document.createElement('div'); cap.className = 'pcap';
+  cap.innerHTML = '<div class="tps">' + fmt(r.tps) + '</div><div class="sub">' + DIMS[r.bindIdx] + '</div>';
+  row.append(nm,holder,cap); tpsWrap.append(row);
+}
+
+// Hover layer.
+const tip = document.getElementById('tip');
+document.addEventListener('pointerover', (e) => {
+  const t = e.target.closest('[data-tip]');
+  if (!t) return;
+  tip.textContent = t.dataset.tip; tip.style.opacity = '1';
+});
+document.addEventListener('pointermove', (e) => {
+  if (tip.style.opacity !== '1') return;
+  tip.style.left = Math.min(e.clientX + 12, innerWidth - tip.offsetWidth - 8) + 'px';
+  tip.style.top = (e.clientY - tip.offsetHeight - 10) + 'px';
+});
+document.addEventListener('pointerout', (e) => {
+  if (e.target.closest('[data-tip]')) tip.style.opacity = '0';
+});
+</script>
+
+</body>
+</html>

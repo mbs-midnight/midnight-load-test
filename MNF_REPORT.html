@@ -1,0 +1,861 @@
+<title>Filling Midnight Blocks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+:root{
+  --ground:#f6f7fa; --surface:#ffffff; --surface-2:#eef0f6; --rule:#d8dce8;
+  --ink:#161a24; --ink-2:#3d4557; --ink-3:#6b7488;
+  --accent:#1f7d76; --accent-soft:#e0f0ee;
+  --warn:#9a6414; --warn-soft:#f7ecd9;
+  --crit:#a8403c; --crit-soft:#f8e4e3;
+  --ok:#2c6e49;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#12151f; --surface:#1a1f2e; --surface-2:#222839; --rule:#2f3648;
+  --ink:#e7eaf2; --ink-2:#aab3c6; --ink-3:#7b8598;
+  --accent:#4cc0b6; --accent-soft:#16302f;
+  --warn:#d8a04a; --warn-soft:#302614;
+  --crit:#e0716c; --crit-soft:#331a1a;
+  --ok:#5fbf8b;
+}}
+:root[data-theme="dark"]{
+  --ground:#12151f; --surface:#1a1f2e; --surface-2:#222839; --rule:#2f3648;
+  --ink:#e7eaf2; --ink-2:#aab3c6; --ink-3:#7b8598;
+  --accent:#4cc0b6; --accent-soft:#16302f;
+  --warn:#d8a04a; --warn-soft:#302614;
+  --crit:#e0716c; --crit-soft:#331a1a;
+  --ok:#5fbf8b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Serif",Georgia,serif;font-size:17px;line-height:1.65;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:940px;margin:0 auto;padding:0 24px 96px}
+h1,h2,h3,.ui{font-family:"IBM Plex Sans",system-ui,sans-serif}
+h1{font-size:clamp(2.1rem,5vw,3.1rem);line-height:1.08;font-weight:700;letter-spacing:-.02em;
+  text-wrap:balance;margin:0 0 .5rem}
+h2{font-size:1.5rem;font-weight:600;letter-spacing:-.01em;text-wrap:balance;
+  margin:64px 0 4px;padding-bottom:8px;border-bottom:2px solid var(--rule)}
+h3{font-size:1.06rem;font-weight:600;margin:32px 0 6px;text-wrap:balance}
+p,li{max-width:var(--measure)}
+p{margin:0 0 1rem}
+ul{margin:0 0 1rem;padding-left:1.1rem}li{margin-bottom:.4rem}
+code,.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.87em;
+  font-variant-numeric:tabular-nums}
+code{background:var(--surface-2);padding:.1em .35em;border-radius:3px;color:var(--ink)}
+a{color:var(--accent)}
+header.masthead{padding:72px 0 8px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+.standfirst{font-size:1.18rem;color:var(--ink-2);max-width:60ch;margin:0 0 28px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 28px;font-family:"IBM Plex Mono",monospace;
+  font-size:.78rem;color:var(--ink-3);border-top:1px solid var(--rule);padding-top:16px}
+.verdict{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--accent);
+  border-radius:4px;padding:22px 26px;margin:36px 0 8px}
+.verdict h2{margin:0 0 8px;border:0;padding:0;font-size:1.15rem}
+.verdict p:last-child{margin-bottom:0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:28px 0}
+.stat{background:var(--surface);padding:16px 18px}
+.stat .v{font-family:"IBM Plex Mono",monospace;font-size:1.5rem;font-weight:600;
+  color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .k{font-family:"IBM Plex Sans",sans-serif;font-size:.76rem;color:var(--ink-3);
+  margin-top:6px;letter-spacing:.02em}
+.scroll{overflow-x:auto;margin:20px 0;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:"IBM Plex Sans",sans-serif;font-size:.88rem}
+th{text-align:left;font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);padding:11px 14px;border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+.good{color:var(--ok);font-weight:600}.bad{color:var(--crit);font-weight:600}
+.card{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--rule);
+  border-radius:4px;padding:18px 22px;margin:14px 0}
+.card.blocker{border-left-color:var(--crit)}
+.card.high{border-left-color:var(--warn)}
+.card.med{border-left-color:var(--accent)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:3px;font-weight:600;white-space:nowrap}
+.chip.blocker{background:var(--crit-soft);color:var(--crit)}
+.chip.high{background:var(--warn-soft);color:var(--warn)}
+.chip.med{background:var(--accent-soft);color:var(--accent)}
+.card p{margin:0 0 .6rem;font-size:.95rem;max-width:none}
+.card p:last-child{margin-bottom:0}
+.card .fix{font-family:"IBM Plex Sans",sans-serif;font-size:.88rem;color:var(--ink-2);
+  border-top:1px solid var(--rule);padding-top:10px;margin-top:12px}
+.card .fix b{color:var(--ink);font-weight:600}
+pre{background:var(--surface-2);border:1px solid var(--rule);border-radius:4px;padding:14px 16px;
+  overflow-x:auto;font-family:"IBM Plex Mono",monospace;font-size:.8rem;line-height:1.55;margin:16px 0}
+pre code{background:none;padding:0;font-size:inherit}
+blockquote{margin:20px 0;padding:14px 20px;border-left:3px solid var(--warn);
+  background:var(--warn-soft);border-radius:0 4px 4px 0;color:var(--ink)}
+blockquote p{margin:0;max-width:none;font-size:.96rem}
+.foot{margin-top:72px;padding-top:20px;border-top:1px solid var(--rule);
+  font-family:"IBM Plex Sans",sans-serif;font-size:.82rem;color:var(--ink-3)}
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <div class="eyebrow">Load test findings &middot; Midnight preview &amp; stagenet</div>
+  <h1>Filling Midnight Blocks</h1>
+  <p class="standfirst">We set out to hold Midnight preview at 50% block fullness and measure whether
+  DUST fees respond. We reached 4.3% of the byte budget &mdash; and, measured afterward on the
+  dimension that actually binds, 32% of the state-write budget in our fullest block. Chasing why we
+  saw no fee movement led somewhere more useful: mainnet has been at the
+  DUST fee floor since its second hour of existence, and the newer ledger already fixes it &mdash;
+  which we verified by driving a block past the crossover and watching the price move.</p>
+  <div class="meta">
+    <span>preview: midnight-js 4.1.1 &middot; ledger-v8 8.1.0</span>
+    <span>stagenet: midnight-js 5.0.0-beta.7 &middot; ledger-v9 1.0.0-rc.3</span>
+    <span>24 wallets &middot; 16-core host</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <h2>Scope of the claim</h2>
+  <p>We did <b>not</b> demonstrate that Midnight cannot scale. We demonstrated that a single
+  well-resourced client cannot drive it hard enough to find out. Under our peak load the chain
+  showed no strain at all: block cadence held at <code>6.000s</code> across 499 intervals, 100% of
+  blocks accepted our transactions, and every well-formed transaction that reached consensus
+  succeeded. We peaked at <b>23 transactions in a block</b>. For that transaction shape the ceiling is
+  about <b>72 per block</b>, set by state writes (696 B each against a 50,000 B budget), not the ~260
+  that bytes on the wire would suggest.</p>
+  <p>Three findings since change the picture. First, the fee price is a per-block state variable
+  which <em>falls</em> at every fullness we achieved, so the experiment was pushing the number we
+  wanted to raise in the wrong direction &mdash; and on <b>mainnet</b> it has been pinned at
+  <code>MIN_COST</code> for 2.39 million blocks, making every transaction cost exactly 1 SPECK.
+  Second, the newer ledger generation <b>already fixes this</b> via a <code>min_block_price</code>
+  floor set to the genesis price; we confirmed the adjustment works by putting one stagenet block at
+  56.9% fullness and measuring the rise. Third, for transfers and contract deployments <code>bytes_written</code>
+  &mdash; not bytes on the wire &mdash; is the dimension that gates block fullness; bytes on the wire
+  bind contract calls and large shielded transfers; compute, read time and storage churn never bind
+  at all. That changes what filling Midnight blocks costs, and it means our own load test was closer
+  to the 50% crossover than the byte proxy showed.</p>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="v">32%</div><div class="k">peak fullness on the binding dimension</div></div>
+  <div class="stat"><div class="v">1.9</div><div class="k">tx/s ceiling, one client</div></div>
+  <div class="stat"><div class="v">2.39M</div><div class="k">mainnet blocks at the fee floor</div></div>
+  <div class="stat"><div class="v">4/4</div><div class="k">shielded transfers on ledger-9</div></div>
+  <div class="stat"><div class="v">54</div><div class="k">stagenet blocks over 50% full, in 6,000</div></div>
+</div>
+
+<h2>Mainnet has been at the DUST fee floor since block 1,197</h2>
+<p><code>overall_price</code> is a per-block state variable that scales every DUST fee. It rises
+when blocks are more than half full, falls when they are not, and is clamped below at
+<code>MIN_COST</code>. Decoded from per-block <code>ledgerParameters</code> on
+<code>indexer.mainnet.midnight.network</code> (ledger <code>8.1.2</code>, node <code>1.0.2</code>):</p>
+
+<pre><code>height          date          overall_price
+     -     genesis       10                        INITIAL_PARAMETERS
+     1     2026-03-18     9.102091156410182        = 10 x 0.9540488^2
+   479     2026-03-18     0.0000000015627278225258633
+ 1,197     2026-03-18     0.000000000000000005421010862427522   &lt;- MIN_COST
+   ...
+2,393,873  2026-09-01     0.000000000000000005421010862427522</code></pre>
+
+<p>The descent took <b>1,197 blocks &mdash; about two hours</b>, and the floor has held for every one
+of the <b>2.39 million blocks since</b>, sampled at seventeen heights across five and a half months.
+Block 1 is already two maximum-decay steps below genesis
+(<code>10 x 0.9540488&sup2; = 9.102091156410184</code> against <code>9.102091156410182</code>
+measured), which is positive evidence the mechanism runs exactly as specified &mdash; the problem is
+not that it is broken but that its equilibrium is the floor.</p>
+
+<p>Realised fees follow mechanically. Over a 6,001-block window, <b>all 126 fee-paying transactions
+cost exactly 1 SPECK</b> &mdash; a single distinct value. Preview (also ledger-8) reached
+<code>MIN_COST</code> by block 1,324 and has held it for ~660,000 blocks; all 1,861 transactions
+from our load test there also cost exactly 1 SPECK.</p>
+
+<p>At the floor no transaction that can physically exist bills more than 1 SPECK. Because the fee is
+<code>(&hellip; x overall_price x SPECS_PER_DUST).ceil()</code>, reaching even 2 SPECK would need a
+transaction roughly 61 completely full blocks in size. So the floor destroys not just the fee
+<em>level</em> but the fee <em>schedule</em>: a contract deployment and a dust-sized transfer cost
+the same.</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Transaction</th><th>Fee at <code>overall_price</code> = 10</th><th>Fee at <code>MIN_COST</code></th><th>Billed</th></tr></thead>
+  <tbody>
+    <tr><td>unshielded transfer, 51,809 B</td><td class="n">1.8008 DUST</td><td class="n">9.8 &times; 10<sup>-4</sup> SPECK</td><td class="n">1 SPECK</td></tr>
+    <tr><td>shielded, 32 outputs, 265,512 B</td><td class="n">3.9688 DUST</td><td class="n">2.2 &times; 10<sup>-3</sup> SPECK</td><td class="n">1 SPECK</td></tr>
+    <tr><td>contract deployment</td><td class="n">13.5203 DUST</td><td class="n">7.3 &times; 10<sup>-3</sup> SPECK</td><td class="n">1 SPECK</td></tr>
+  </tbody>
+</table></div>
+
+<h3>What the floor costs an attacker</h3>
+<p>The specification (<code>spec/cost-model.md</code>) frames <code>overall_price</code> as
+denial-of-service deterrence: "an attacker has to pay as much as a regular user." At the floor that
+defense can be priced. Assumptions: NIGHT at <b>$0.02</b>, 5 DUST of capacity per NIGHT refilling in
+about a week (measured: 5,000 NIGHT accrued 3,639 DUST in ~24 h, a 6.87-day refill), and the adjustment
+live and compounding at +4.5951% per fully saturated block, which is what we measured. Because the
+climb is exponential from a base eighteen orders of magnitude down, almost the whole cost of an ascent
+back to the genesis price falls in its last hundred blocks:</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Held at 100% fullness</th><th>Blocks</th><th>Price reached</th><th>Cumulative DUST</th><th>NIGHT</th><th>Cost</th></tr></thead>
+  <tbody>
+    <tr><td>1 hour</td><td class="n">600</td><td class="n">2.8 &times; 10<sup>-6</sup></td><td class="n">~0</td><td class="n">~0</td><td class="n good"><b>$0.00</b></td></tr>
+    <tr><td>1.43 h</td><td class="n">859</td><td class="n">0.31</td><td class="n">10.2</td><td class="n">2.0</td><td class="n"><b>$0.04</b></td></tr>
+    <tr><td>1.5 h</td><td class="n">900</td><td class="n">1.97</td><td class="n">64.1</td><td class="n">12.8</td><td class="n">$0.26</td></tr>
+    <tr><td>1.56 h</td><td class="n">936</td><td class="n">9.93</td><td class="n">323.0</td><td class="n">64.6</td><td class="n">$1.29</td></tr>
+    <tr><td>2 hours</td><td class="n">1,200</td><td class="n">1.4 &times; 10<sup>6</sup></td><td class="n">4.6 &times; 10<sup>7</sup></td><td class="n">9.1 &times; 10<sup>6</sup></td><td class="n bad">$182,938</td></tr>
+  </tbody>
+</table></div>
+
+<p>An hour of complete saturation is free to three decimal places. The mechanism bites eventually
+&mdash; at two hours it is ruinous &mdash; but not inside the window an attacker would choose, and the
+window renews itself: rise and decay rates are near-symmetric, so stopping at 859 blocks and waiting
+972 blocks for the price to fall back to the floor gives a repeatable 1,831-block cycle.</p>
+
+<blockquote>
+  <p><b>Roughly $0.32 per day holds 47% of all mainnet blocks at 100% fullness, indefinitely.</b>
+  The duty cycle is fixed by the ratio of the climb rate to the decay rate, so it is the same at any
+  attack amplitude; and because the gap being exploited is fifteen orders of magnitude, the
+  conclusion is insensitive to the token price &mdash; at $0.50 the same attack costs $7.99 per day.
+  The attacker's binding cost is proving compute, not DUST; the economic defense is not weak so much
+  as absent.</p>
+</blockquote>
+
+<p>The floor's depth is not something the specification chose. Its <code>update()</code> applies a
+<code>MIN_COST</code> clamp to the four <em>per-dimension factors</em>, which are normalized around 1,
+where it is a rounding guard that "still allows upwards adjustment"; <code>overall_price</code>
+receives no floor at all in the spec. The implementation applies the same constant to
+<code>overall_price</code>, which starts at 10 &mdash; turning a rounding guard into a floor eighteen
+orders of magnitude down. Ledger 9's <code>min_block_price</code> is the fix for exactly that.</p>
+
+<h2>The newer ledger fixes this, and we verified it</h2>
+<p>Stagenet runs a different parameter generation. Its <code>ledgerParameters</code> blob is tagged
+<code>[v8]</code> where mainnet and preview are <code>[v5]</code>, and the structural diff between
+them is exactly one field:</p>
+
+<pre><code>+ min_block_price    (absent on v5)    FixedPoint(10)   on stagenet</code></pre>
+
+<p>Its value is 10 &mdash; precisely the genesis <code>overall_price</code>. So the floor has been
+raised from <code>MIN_COST</code> (5.42 &times; 10<sup>-18</sup>) to the genesis price, and stagenet's
+price rests on it rather than collapsing eighteen orders of magnitude.</p>
+
+<p>The 10 is the price of one <em>full block</em>, not a minimum per transaction. A transaction pays
+for the fraction of a block it consumes, so at the floor a light contract call that uses 2% of a
+block costs about 0.20 DUST and a plain transfer 0.26&ndash;0.55 DUST. State writes are priced at four
+times the rate of the other dimensions (<code>write_factor</code> 2.28 against 0.57), which is why a
+contract deployment can cost 13.8 DUST while using only 59% of the write budget.</p>
+
+<blockquote>
+  <p><b>Correction.</b> An earlier revision of this report concluded that the fee adjustment was
+  <em>inert</em> on ledger-9, from a run that raised block occupancy to 27.6% and saw no movement.
+  That conclusion was wrong, and wrong for an avoidable reason: every test was <em>below</em> the 50%
+  crossover, where the specified behavior is decay &mdash; and a price resting on a floor is
+  indistinguishable from a frozen price when you only ever push it downward.</p>
+</blockquote>
+
+<h3>Above the crossover it moves, and it tracks the specified curve</h3>
+<p>A single shielded transfer of 569,482 bytes put one block at 56.9% fullness. The block carrying it
+read <code>10.0279466771155</code>; the next, empty, read <code>10</code>. Two independent samplers
+recorded the same value at the same height. Repeating at a slightly different size gives a second
+point, and stagenet's own organic traffic supplies more:</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Source</th><th>Fullness</th><th>Predicted multiplier</th><th>Measured</th><th>Residual</th></tr></thead>
+  <tbody>
+    <tr><td>ours, 569,482 B</td><td class="n">56.9482%</td><td class="n">1.002797380</td><td class="n">1.002794668</td><td class="n">&minus;2.71 &times; 10<sup>-6</sup></td></tr>
+    <tr><td>ours, 555,715 B</td><td class="n">55.5715%</td><td class="n">1.002237893</td><td class="n">1.002235362</td><td class="n">&minus;2.53 &times; 10<sup>-6</sup></td></tr>
+    <tr><td>third-party deploy</td><td class="n">58.4909%</td><td>&mdash;</td><td class="n">1.003429575</td><td>&mdash;</td></tr>
+  </tbody>
+</table></div>
+
+<p>Five significant figures on both of ours, with the same small negative residual in each &mdash;
+consistent with the specification interpolating linearly between logit table points rather than
+evaluating the logit exactly. The third observation is somebody else's transaction, so the mechanism
+is not responding only to us.</p>
+
+<h3>Harvested from stagenet's own traffic</h3>
+<p>Rather than generate every data point, we scanned 6,000 consecutive stagenet blocks and recovered
+the fullness the <em>node</em> reported, by taking the per-block multiplier as
+<code>price&#8202;<sub>N</sub>&#8202;/&#8202;price&#8202;<sub>N-1</sub></code> and inverting the curve.
+Using the ratio rather than assuming a baseline of 10 keeps it correct when high-fullness blocks land
+consecutively and the price is compounding.</p>
+
+<p><b>54 of 6,000 blocks crossed the 50% threshold</b> &mdash; about one in 111, entirely from
+organic traffic plus our three. A recurring contract deployment is strikingly deterministic: the same
+13.537 DUST shape produced a multiplier of <code>1.003429574649</code>, identical to twelve digits,
+across roughly thirty separate occurrences.</p>
+
+<h2>Why the fee experiment could not have worked</h2>
+<p>This is the central finding, and it was prompted by an observation from the explorer: stagenet
+transactions average <b>~1.22 DUST</b>, while every preview transaction we ever submitted cost
+<code>1.000</code> SPECK. We decoded both chains' live <code>ledgerParameters</code> to find out why.
+The answer is a single scalar.</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>fee_prices field</th><th>preview (live)</th><th>stagenet (live)</th><th></th></tr></thead>
+  <tbody>
+    <tr><td><code>overall_price</code></td><td class="n bad">5.421010862427522e-18</td><td class="n">10</td><td><b>differs by 1.8&times;10<sup>18</sup></b></td></tr>
+    <tr><td><code>read_factor</code></td><td class="n">0.5714285714</td><td class="n">0.5699256970</td><td>match</td></tr>
+    <tr><td><code>compute_factor</code></td><td class="n">0.5714285714</td><td class="n">0.5699256970</td><td>match</td></tr>
+    <tr><td><code>block_usage_factor</code></td><td class="n">0.5714285714</td><td class="n">0.5804458180</td><td>match</td></tr>
+    <tr><td><code>write_factor</code></td><td class="n">2.2857142857</td><td class="n">2.2797027880</td><td>match</td></tr>
+    <tr><td><code>price_adjustment_a</code></td><td class="n">100</td><td class="n">100</td><td>match</td></tr>
+  </tbody>
+</table></div>
+
+<p>Every factor agrees. Only <code>overall_price</code> differs &mdash; and it is a plain linear
+multiplier on the entire fee (<code>cost_model.rs:400</code>:
+<code>self.overall_price * (utilization_cost + write_cost + churn_cost)</code>).</p>
+
+<p>Preview's value is not arbitrary. <code>5.421010862427522e-18 = 100 &times; 2<sup>-64</sup></code>,
+which is <code>FixedPoint(100)</code> &mdash; and <code>MIN_COST</code> is defined as exactly
+<code>FixedPoint(100)</code>. <b>Preview is pinned precisely on the floor.</b> Our 1,861 transactions
+at <code>1.000</code> SPECK were reading that floor, not a broken fee market.</p>
+
+<h3>The price is a per-block state variable, not configuration</h3>
+<p>It is recomputed every block from the previous block's fullness, then clamped:</p>
+<pre><code>overall_price &larr; max(overall_price &times; (1 + logit(fullness)/a),  MIN_COST)
+
+price_adjustment_function(usage, a) = -ln(1/clamp(usage, 0.01, 0.99) - 1) / a      // a = 100</code></pre>
+<p>That gives a per-block multiplier bounded by <code>0.954</code> (empty) and <code>1.046</code>
+(full), crossing 1.000 at exactly 50% fullness. The consequence for this experiment is stark:</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Sustained fullness</th><th>Price change / block</th><th>Blocks to 2&times;</th><th>Wall clock to 2&times;</th><th>To stagenet's level</th></tr></thead>
+  <tbody>
+    <tr><td class="n">12% <b>&larr; our mean, write dimension</b></td><td class="n bad">&minus;1.99%</td><td>never</td><td>never</td><td class="bad">never &mdash; decays</td></tr>
+    <tr><td class="n">32% <b>&larr; our fullest block</b></td><td class="n bad">&minus;0.75%</td><td>never</td><td>never</td><td class="bad">never &mdash; decays</td></tr>
+    <tr><td class="n">25%</td><td class="n bad">&minus;1.10%</td><td>never</td><td>never</td><td class="bad">never &mdash; decays</td></tr>
+    <tr><td class="n">50%</td><td class="n">0.00%</td><td>never</td><td>never</td><td>static</td></tr>
+    <tr><td class="n">60%</td><td class="n good">+0.41%</td><td class="n">171</td><td class="n">17.1 min</td><td class="n">17.3 h</td></tr>
+    <tr><td class="n">75%</td><td class="n good">+1.10%</td><td class="n">63</td><td class="n">6.3 min</td><td class="n">6.4 h</td></tr>
+    <tr><td class="n">90%</td><td class="n good">+2.20%</td><td class="n">32</td><td class="n">3.2 min</td><td class="n">3.2 h</td></tr>
+    <tr><td class="n">99&ndash;100%</td><td class="n good">+4.60%</td><td class="n">15</td><td class="n">1.5 min</td><td class="n">1.6 h</td></tr>
+  </tbody>
+</table></div>
+
+<p>Three things follow. <b>The 50% target was a real cliff, not a soft one</b> &mdash; below it the
+price actively falls, so no amount of runtime at 12% fullness could ever have produced a reading.
+<b>The mechanism is fast once above it</b>: a detectable 2&times; move takes 15 blocks at high
+fullness, about 90 seconds. And <b>the mechanism is not broken</b> &mdash; stagenet, which is
+priced 1.8&times;10<sup>18</sup> higher, charges real fees. We measured a live 51,809-byte transaction
+there at <b>1.80 DUST</b> under chain parameters, consistent with the ~1.22 DUST explorer average.</p>
+
+<blockquote>
+  <p>The practical reading for MNF: a chain that has been idle long enough sits at
+  <code>MIN_COST</code> and stays there. Fee-response testing must begin by driving fullness above
+  50% and holding it &mdash; the absolute fee level before that point carries no information, on any
+  network, for any duration.</p>
+</blockquote>
+
+<h2>Chain constants, measured</h2>
+<p>Decoded from a live block's <code>ledgerParameters</code> using the ledger WASM, because the
+indexer exposes that field only as opaque hex. Several contradict the defaults compiled into
+Midnight's own tooling.</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Parameter</th><th>Tooling default</th><th>Live on preview</th><th>Consequence</th></tr></thead>
+  <tbody>
+    <tr><td>block_usage limit</td><td class="n">200,000 B</td><td class="n">1,000,000 B</td><td>Every fullness figure from stock tooling is <b>5&times; overstated</b></td></tr>
+    <tr><td>read_time / compute_time</td><td class="n">1.0 s</td><td class="n">2.0 s</td><td>&mdash;</td></tr>
+    <tr><td>bytes_churned</td><td class="n">1,000,000</td><td class="n">50,000,000</td><td>&mdash;</td></tr>
+    <tr><td>bytes_written</td><td class="n">50,000</td><td class="n">50,000</td><td>Unchanged &mdash; the only limit left at its default, and now the tightest by 20&times;</td></tr>
+    <tr><td>overall_price</td><td class="n">10</td><td class="n">5.42e-18</td><td>At <code>MIN_COST</code> &mdash; see above</td></tr>
+    <tr><td>block_usage_factor</td><td class="n">1</td><td class="n">0.5714</td><td>Prices already adjusted from genesis</td></tr>
+    <tr><td>global_ttl</td><td class="n">3,600 s</td><td class="n">1,209,600 s</td><td>14 days, not one hour</td></tr>
+    <tr><td>block cadence</td><td>&mdash;</td><td class="n">6.000 s</td><td>n=499, every interval within 1 ms</td></tr>
+    <tr><td>baseline load</td><td>&mdash;</td><td class="n">0.0053 tx/s</td><td>97% of blocks empty &mdash; all load was ours</td></tr>
+  </tbody>
+</table></div>
+
+<p>The five block limits are <b>identical on mainnet, preview and stagenet</b>, decoded from all three
+on 3 September 2026. Four of the five were raised from the genesis defaults before mainnet;
+<code>bytes_written</code> was not, which is why it is the dimension that binds most transfers and every
+deployment. Mean block time over the last 1,000 blocks: mainnet 6.000 s, stagenet 6.000 s, preview
+6.018 s.</p>
+
+<p>Two figures in the previous revision of this report were wrong, and both came from reading the
+<em>genesis defaults</em> rather than the chain: <code>global_ttl</code> is
+<b>1,209,600 s</b> (14 days), not 3,600 s, and <code>block_usage_factor</code> is <b>0.5714</b>, not
+0.5923. Decoding the live parameters is the only reliable source, and it is what produced the
+<code>overall_price</code> finding above.</p>
+
+<h2>Transaction economics</h2>
+<p>Measured on the wire, every transaction type lands in the same order of magnitude of bytes per
+unit of proving. But bytes on the wire are only one of five dimensions, and for transfers they are
+not the one that binds &mdash; see the next section. The table stands as a size and proving-time
+reference; the fullness conclusions that were once drawn from it do not.</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Transaction</th><th>Size</th><th>Prove (8.1.0)</th><th>Bytes/s per wallet</th></tr></thead>
+  <tbody>
+    <tr><td>Unshielded, 1 output</td><td class="n">673 B</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+    <tr><td>Unshielded, with change</td><td class="n">3,825 B</td><td class="n">0.40 s</td><td class="n">1,779</td></tr>
+    <tr><td>Contract call, k=18/19</td><td class="n">8,151 B</td><td class="n">~30 s</td><td class="n">&mdash;</td></tr>
+    <tr><td>Shielded, 64 outputs</td><td class="n">332,930 B</td><td class="n">85 s</td><td class="n">3,758</td></tr>
+    <tr><td>Shielded, 194 outputs</td><td class="n">998,790 B</td><td class="n">242 s</td><td class="n">4,061</td></tr>
+  </tbody>
+</table></div>
+
+<p>An extra <b>unshielded</b> output costs about <code>1.2 bytes</code> on the wire but roughly
+<b>400&ndash;450 bytes of state writes</b>, because every UTXO it creates is inserted into the ledger's
+commitment structures. On the binding dimension, output count is the cheapest fullness dial there is:</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Unshielded transfer (stagenet)</th><th>Size</th><th>bytes_written</th><th>Write fullness</th><th>Prove</th><th>Fee at price 10</th></tr></thead>
+  <tbody>
+    <tr><td>ours, 2 outputs</td><td class="n">9,879 B</td><td class="n">1,328 B</td><td class="n">2.66%</td><td class="n">0.53 s</td><td class="n">0.70 DUST</td></tr>
+    <tr><td>ours, 3 in / 9 out</td><td class="n">10,105 B</td><td class="n">3,936 B</td><td class="n">7.87%</td><td class="n">0.56 s</td><td class="n">2.00 DUST</td></tr>
+    <tr><td>ours, 16 outputs</td><td class="n">31,718 B</td><td class="n">7,832 B</td><td class="n">15.66%</td><td class="n">1.64 s</td><td class="n">4.04 DUST</td></tr>
+    <tr><td>third party, 4 in / 40 out</td><td class="n">4,185 B</td><td class="n">15,216 B</td><td class="n bad"><b>30.43%</b></td><td>&mdash;</td><td class="n">7.56 DUST</td></tr>
+  </tbody>
+</table></div>
+
+<p>A 4 KB transaction that is 0.4% of the byte budget is 30% of the write budget. An extra
+<b>shielded</b> output, by contrast, costs about <code>5,122 bytes</code> on the wire because each
+carries its own proof and ciphertext, and for shielded transfers bytes on the wire do bind.</p>
+
+<blockquote>
+  <p><b>Correction.</b> An earlier revision concluded from this that shielded transfers are "the only
+  shape that reaches meaningful fullness in few transactions". That is wrong. It measures bytes on the
+  wire, and bytes are not the binding dimension for contract activity &mdash; see below, where a
+  28 KB contract deployment reaches 58% fullness.</p>
+</blockquote>
+
+<h2>Which dimension actually binds</h2>
+<p>Overall fullness is the <b>maximum</b> across five normalized dimensions, so the binding one
+decides everything &mdash; and it is not the one we assumed. We downloaded transactions from
+high-fullness stagenet blocks, rebuilt them locally with <code>ledger-v9</code>, and computed
+<code>cost(params)</code> against the chain's live parameters:</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Transaction</th><th>Size</th><th>read</th><th>compute</th><th>block_usage</th><th>bytes_written</th><th>churn</th></tr></thead>
+  <tbody>
+    <tr><td>ContractDeploy (third party)</td><td class="n">28,282 B</td><td class="n">0.183%</td><td class="n">0.272%</td><td class="n">2.821%</td><td class="n bad"><b>58.490%</b></td><td class="n">0.031%</td></tr>
+    <tr><td>ContractDeploy (third party)</td><td class="n">22,526 B</td><td class="n">0.183%</td><td class="n">0.272%</td><td class="n">2.246%</td><td class="n bad"><b>48.760%</b></td><td class="n">0.031%</td></tr>
+    <tr><td>ContractCall (third party)</td><td class="n">25,809 B</td><td class="n">0.425%</td><td class="n">1.019%</td><td class="n bad"><b>2.574%</b></td><td class="n">1.792%</td><td class="n">0.104%</td></tr>
+    <tr><td>our shielded transfer</td><td class="n">569,482 B</td><td class="n">4.747%</td><td class="n">12.423%</td><td class="n bad"><b>56.941%</b></td><td class="n">17.600%</td><td class="n">1.520%</td></tr>
+  </tbody>
+</table></div>
+
+<p>The decomposed <code>bytes_written</code> figure reproduces the node-reported fullness
+<b>exactly</b> &mdash; 58.490% against the 58.4909% recovered independently by inverting the price
+curve. So <code>bytes_written</code>, capped at <b>50,000 bytes</b> and 20&times; tighter than
+<code>block_usage</code>, is what gates fullness for contract activity. A contract deployment
+consumes 58% of a block's write budget while using 2.8% of its byte budget. Compute is not close:
+0.27%.</p>
+
+<p>We then extended the decomposition to <b>every regular transaction in the last 6,000 blocks of all
+three networks</b> &mdash; 1,334 transactions, 3 September 2026 &mdash; each rebuilt with the matching
+ledger library and costed against its own network's live parameters. <code>block_usage</code> binds
+748 of them (contract calls, large shielded transfers), <code>bytes_written</code> 575 (transfers,
+deployments), <code>compute_time</code> 11 (small contract calls whose three cheapest dimensions sit
+within a hair of each other). <code>read_time</code> never exceeds 4.7% of a block and
+<code>bytes_churned</code> never exceeds 1.5%; neither ever binds. At the ledger level Midnight is
+neither CPU-bound nor I/O-bound. The full shape-by-shape capacity analysis is in the companion page,
+<a href="https://claude.ai/code/artifact/6bec22f2-50d7-4d3c-af07-07f9670743d1">Midnight's Capacity Ceiling</a>.</p>
+
+<p>Applied to our own preview load test, the same decomposition shows what the byte proxy hid. Our
+fullest block, 637,940, held 23 fallible-segment transfers writing 696 B each: <b>8.4% of the byte
+budget but 32.0% of the write budget</b>, with compute at 12.3%. Our mean of 8.6 transactions per
+block was about 12% write fullness. The 50% crossover needed roughly 36 such transfers in one block,
+against a measured single-client ingest ceiling of about 11.</p>
+
+<p>Efficiency therefore depends entirely on which resource is scarce, and there is no single "best"
+attack or load shape:</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Vehicle</th><th>Fullness per byte</th><th>Fullness per DUST</th><th>Fullness per proving second</th></tr></thead>
+  <tbody>
+    <tr><td>unshielded, 40 outputs</td><td class="n good">73&times; better</td><td class="n">4.02 %/DUST</td><td class="n good">~9.6 %/s <span style="color:var(--ink-3)">(16-output, ours)</span></td></tr>
+    <tr><td>ContractDeploy</td><td class="n good">20.7&times; better</td><td class="n">4.32 %/DUST</td><td class="n">2.44 %/s</td></tr>
+    <tr><td>shielded transfer</td><td class="n">&mdash;</td><td class="n good">7.47 %/DUST</td><td class="n">1.02 %/s</td></tr>
+  </tbody>
+</table></div>
+
+<p>Shielded transfers are <b>1.7&times; more DUST-efficient</b> at producing fullness, because the fee
+sums <code>max(read, compute, block) + write + churn</code> while fullness takes the maximum &mdash;
+so a write-heavy deploy pays for writes that do not raise its fullness, and a
+<code>block_usage</code>-heavy transfer is "full" cheaply. Where DUST is effectively free, as at the
+mainnet floor, many-output unshielded transfers win outright: a 16-output transfer is 15.7% of the
+write budget for 1.6 s of proving, so four of them cross 50% for about 7 s of proving per block.</p>
+
+<h2>The ledger-9 stack, validated on stagenet</h2>
+<p>Because the shielded blocker was the single thing standing between us and a viable 50% run, we
+ported the harness to the Midnight 2.0 stack and re-ran the paths that matter against stagenet
+(node <code>2.0.0-d9729c13</code>, ledger version <code>=1.0.0</code>).</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Path</th><th>Result on ledger-9</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr><td>Wallet build &amp; cold sync</td><td class="good">works</td><td class="n">~2 min, 11,068 dust indices</td></tr>
+    <tr><td>DUST registration &amp; generation</td><td class="good">works</td><td>one transient RPC drop, succeeded on retry</td></tr>
+    <tr><td>Unshielded transfer</td><td class="good">works</td><td class="n">2 / 8 / 16 outputs, prove 0.35&ndash;1.6 s</td></tr>
+    <tr><td>Contract deploy</td><td class="good">works</td><td class="n">24.0 s</td></tr>
+    <tr><td>Contract call (shielded mint)</td><td class="good">works</td><td><code>SucceedEntirely</code></td></tr>
+    <tr><td><b>Shielded transfer</b></td><td class="good"><b>works &mdash; 4/4</b></td><td class="n">prove 4.1&ndash;4.9 s; coins 1&rarr;4 on chain, value conserved</td></tr>
+    <tr><td>Shielding NIGHT (<code>initSwap</code>)</td><td>n/a by design</td><td>ledger invariant &mdash; NIGHT is not shieldable</td></tr>
+  </tbody>
+</table></div>
+
+<p>Getting a shielded balance to test with required minting one: stagenet has no shielded faucet and
+the swap path is closed, so we deployed midnight-js's own e2e fixture
+(<code>testkit-js-e2e/src/contract/shielded.compact</code>) and called
+<code>mintAndSendShielded</code> to issue a shielded coin to our own key.</p>
+
+<h3>Shielded scaling &mdash; and what it implies for a 50% run</h3>
+<p>With shielded working, we measured how it scales. Stagenet's block limits, decoded live, are
+<code>block_usage 1,000,000 B</code>, <code>bytes_written 50,000</code>,
+<code>bytes_churned 50,000,000</code>, and <code>read_time</code> / <code>compute_time</code> of
+<code>2.000 s</code> each. Overall fullness is the <b>maximum</b> across all five, so the binding
+dimension is what matters, not the byte count.</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>Shielded outputs</th><th>Size</th><th>Prove</th><th>Fee</th><th>block_usage</th><th>bytes_written</th><th>compute</th><th>Fullness (max)</th></tr></thead>
+  <tbody>
+    <tr><td class="n">2</td><td class="n">71,582 B</td><td class="n">4.5 s</td><td class="n">&mdash;</td><td class="n">7.15%</td><td class="n">5.06%</td><td class="n">2.40%</td><td class="n"><b>7.15%</b></td></tr>
+    <tr><td class="n">8</td><td class="n">102,476 B</td><td class="n">7.0 s</td><td class="n">2.01 DUST</td><td class="n">10.24%</td><td class="n">5.82%</td><td class="n">3.06%</td><td class="n"><b>10.24%</b></td></tr>
+    <tr><td class="n">32</td><td class="n">265,512 B</td><td class="n">23.4 s</td><td class="n">3.97 DUST</td><td class="n">26.54%</td><td class="n">9.92%</td><td class="n">6.39%</td><td class="n"><b>26.54%</b></td></tr>
+  </tbody>
+</table></div>
+
+<p><code>block_usage</code> binds throughout, and the marginal cost of a shielded output is
+<b>6,793 bytes</b> and <b>681 ms</b> of proving. That gives the number this whole exercise was
+looking for:</p>
+
+<blockquote>
+  <p><b>A single 32-output shielded transaction is 26.5% of a block.</b> Two of them clear the 50%
+  crossover. Extrapolating the marginal cost, one transaction of ~65 outputs reaches 50% on its own,
+  at roughly 47 s of proving &mdash; verified: our 68-output transfer, 569,482 B, was 56.9% and proved
+  in 56 s.</p>
+</blockquote>
+
+<p>This reframes the ceiling. Our measured single-client mempool limit is <code>1.9 tx/s</code>,
+about <b>11 transactions per 6-second block</b> &mdash; and 50% fullness now needs <b>two</b>. The
+mempool ingest limit, which capped the plain-transfer approach at about 15% write fullness, is no longer the binding
+constraint. What replaces it is proving throughput: sustaining two 32-output transactions per block
+means ~47 s of proving per 6 s of chain time, or roughly <b>8 concurrent proving lanes</b>.</p>
+
+<p>It also removes the faucet from the critical path. A minting contract issues arbitrary amounts of
+a shielded token to arbitrary keys, so a fleet can be bootstrapped for a shielded flood without a
+faucet and without any NIGHT-shielding step &mdash; which is fortunate, since that step is closed by
+construction.</p>
+
+<h2>Defects</h2>
+
+<div class="card med">
+  <h3><span class="chip med">Resolved</span> Error 170 on shielded transfers is a <code>wallet-sdk</code> 1.x defect, fixed on ledger-9</h3>
+  <p>On preview, <code>wallet-sdk</code> 1.1.0 and 1.2.0 fail every shielded transfer with
+  <code>1010: Invalid Transaction: Custom error: 170</code>
+  (<code>MalformedError::InvalidDustSpendProof</code>), 3/3, while unshielded transfers from the same
+  wallets succeed 1,861/1,861. Shielded tokens sent <em>from Lace</em> into those same wallets arrive
+  correctly, which established it as a client defect rather than a protocol one.</p>
+  <p><b>It does not reproduce on the 2.0 stack.</b> Four shielded transfers, four successes, verified
+  on chain. This closes the investigation and explains Lace: Lace is on the newer client line.</p>
+  <p>The comparison is like-for-like, which we checked rather than assumed. Both sides move a
+  <b>user-created</b> shielded token, not native NIGHT: the preview wallets hold token
+  <code>1f1a2c72&hellip;</code> (Lace-sent) and the stagenet wallet holds <code>55dd57fb&hellip;</code>
+  from a contract we deployed. Both are derived
+  <code>tokenType(domain_sep, contract_address)</code> hashes. Native NIGHT could not have been the
+  variable in either case &mdash; see the invariant below, which has existed since ledger
+  <code>6.1.0-alpha.2</code>.</p>
+  <p class="fix"><b>Consequence:</b> no fix is needed on the ledger-9 path, and no 1.x workaround
+  should be carried forward. For anyone still on ledger-8, shielded remains unusable from the SDK.
+  <b>Verified on:</b> <code>wallet-sdk</code> 2.0.0-beta.2 + <code>midnight-js</code> 5.0.0-beta.7 +
+  <code>ledger-v9</code> 1.0.0-rc.3 + <code>proof-server</code> 9.0.0-rc.5.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> <code>initSwap</code> offers an operation the ledger forbids by design</h3>
+  <p>To be clear about what this is and is not: <b>NIGHT is not meant to be shieldable</b>, and the
+  ledger is behaving correctly. This is an API-ergonomics defect, not a protocol one, and we
+  originally filed it too high.</p>
+  <p>Moving NIGHT from the unshielded pool into the shielded pool is rejected by the node every time.
+  A small transaction returns <code>231</code>
+  (<code>FeeCalculation(OutsideTimeToDismiss)</code>); a larger one returns <code>199</code>, which
+  names the real cause &mdash; <code>InvariantViolation::NightBalance</code>:</p>
+  <pre><code>pub fn check_night_balance_invariant(&amp;self) -&gt; Result&lt;(), InvariantViolation&gt; {
+    let total_night = utxo_ann.value + self.locked_pool + self.reserve_pool
+        + self.block_reward_pool + treasury_night + unclaimed_rewards + contract_value;
+    if total_night != MAX_SUPPLY { Err(InvariantViolation::NightBalance(total_night)) }</code></pre>
+  <p>The supply accounting sums unshielded UTXOs, the pools, treasury, unclaimed rewards and contract
+  value. <b>There is no shielded/zswap term.</b> Shielding NIGHT reduces <code>utxo_ann.value</code>
+  with nothing to compensate, so the invariant fails by construction. Contract-minted shielded tokens
+  are unaffected &mdash; they shield and transfer normally.</p>
+  <p>This is not new in ledger-9. <code>check_night_balance_invariant</code> dates to the initial
+  import at <code>6.1.0-alpha.2</code> (2025-09-05), so <b>NIGHT has never been shieldable</b> on
+  preview either. Any shielded balance on any of these networks is necessarily a user-created
+  token.</p>
+  <p class="fix"><b>The defect is the API surface, not the rule.</b> The SDK exposes
+  <code>initSwap</code> for NIGHT with no guard, so a caller builds, signs, proves and submits a
+  transaction the chain can never accept &mdash; paying the proving cost &mdash; and then receives a
+  fee-calculation error code (<code>231</code>) that points nowhere near the cause.
+  <b>Suggested:</b> reject the native token in <code>initSwap</code> client-side with an explicit
+  message, and state in the docs that NIGHT is unshieldable by design. <b>Reproduced</b> 6/6 across
+  TTLs of 1 h / 10 min / 5 min, output counts 1 / 4 / 8, and 5.4&times; transaction padding.</p>
+</div>
+
+<div class="card blocker">
+  <h3><span class="chip blocker">Blocker</span> <code>wallet-sdk@2.0.0-beta.2</code> does not install</h3>
+  <p><code>wallet-sdk-facade@5.0.0-beta.2</code> does
+  <code>import { Clock } from '@midnight-ntwrk/wallet-sdk-utilities'</code>, but the barrel pins
+  <code>wallet-sdk-utilities</code> to <code>1.2.0</code>, which predates <code>Clock</code>. A clean
+  install of the exact version set in the partner document fails at <b>import time</b>, before any
+  user code runs:</p>
+  <pre><code>The requested module '@midnight-ntwrk/wallet-sdk-utilities'
+does not provide an export named 'Clock'</code></pre>
+  <p class="fix"><b>Workaround:</b> an npm override to <code>1.2.1</code>, whose exports are a strict
+  superset. <b>Already fixed upstream:</b> the newest v2 canary,
+  <code>2.0.0-canary.20260730145109-1cf94a3</code>, pins <code>utilities@1.2.2-canary</code> and
+  installs and imports cleanly with no override. <b>Suggested:</b> cut that as beta.3 &mdash; the
+  published <code>beta</code> tag is currently unusable as shipped.</p>
+</div>
+
+<div class="card high">
+  <h3><span class="chip high">High</span> Client-side fee checks run against the wrong cost model, with the wrong flag</h3>
+  <p>Two independent gaps let a client believe a transaction is priceable when the node disagrees.</p>
+  <p><b>The flag.</b> In <code>ledger-wasm/src/tx.rs</code>, both <code>cost()</code> and
+  <code>fees()</code> resolve their enforcement argument as
+  <code>enforce_time_to_dismiss.unwrap_or(false)</code>. The check the node applies is therefore
+  <em>off by default</em> in the binding every wallet uses.</p>
+  <p><b>The model.</b> <code>LedgerParameters.initialParameters()</code> &mdash; the genesis defaults
+  the SDK reaches for &mdash; is not what either chain runs. Diffed against live parameters it
+  disagrees in <b>143 lines</b> on stagenet and <b>142</b> on preview, across the per-operation cost
+  model. The <code>time_to_dismiss</code> limits and the DUST parameters <em>do</em> match exactly;
+  it is specifically the cost model that diverges. On one live transaction the same fee computed
+  <b>4.92 DUST</b> against genesis and <b>1.80 DUST</b> against the chain.</p>
+  <p class="fix"><b>Suggested:</b> default the enforcement flag to <code>true</code>, and have the
+  SDK fetch live <code>ledgerParameters</code> rather than defaulting to genesis for anything a user
+  will see as a fee estimate. Applications that trust <code>initialParameters()</code> are quoting
+  fees from a model no network is running.</p>
+</div>
+
+<div class="card high">
+  <h3><span class="chip high">High</span> The <code>latest</code> proof-server tag is two ledger generations stale</h3>
+  <p><code>midnightnetwork/proof-server:latest</code> resolves to <b>7.0.0-rc.1</b>, a ledger-7 build.
+  Against a ledger-8 SDK it produces valid proofs but at <b>0.53 proofs/s</b>. The correct image,
+  <code>midnightntwrk/proof-server:8.1.0</code>, manages <b>5.2 proofs/s</b> &mdash; a
+  <b>9.8&times;</b> difference, or 14.2 versus 1.17 core-seconds per proof.</p>
+  <p>The two organisation names differ by two characters &mdash; <code>midnightnetwork</code> versus
+  <code>midnightntwrk</code> &mdash; and the stale one holds the <code>latest</code> tag. Nothing
+  warns you: proofs verify and transactions land, just an order of magnitude slower.</p>
+  <p class="fix"><b>Suggested:</b> retire or repoint the stale tag, and have the SDK warn when the
+  proof server's <code>/version</code> does not match the ledger generation it was built against.
+  This single misconfiguration invalidated three of our intermediate conclusions.</p>
+</div>
+
+<div class="card high">
+  <h3><span class="chip high">High</span> A single refused WebSocket permanently retires a wallet, silently</h3>
+  <p><code>wallet-sdk-indexer-client</code> creates its graphql-ws client with
+  <code>shouldRetry: () =&gt; false</code>. One refused connect is unrecoverable: the wallet sits at
+  <code>isConnected=false</code> forever and raises nothing. In one run both wallets dropped to zero
+  throughput for the remaining six minutes with no error surfaced.</p>
+  <p>This interacts badly with rate limiting. A brief 403 does not degrade a long run &mdash; it ends
+  it, and from the client an idle chain and a dead connection look identical.</p>
+  <p class="fix"><b>Suggested:</b> bounded retry with backoff, or at minimum an observable
+  disconnected state. We had to build an external watchdog that detects stalled progress and rebuilds
+  the wallet, because <code>isConnected</code> keeps reporting <code>true</code> after
+  <code>stop()</code>.</p>
+</div>
+
+<div class="card high">
+  <h3><span class="chip high">High</span> Dust cold-sync is prohibitive and degrades with concurrency</h3>
+  <p>A cold dust sync takes minutes per wallet and worsens sharply in parallel. Two wallets synced in
+  <code>446 s</code>; six concurrent produced <b>one</b> usable wallet in 49 minutes and the rest hit
+  a 45-minute timeout. Priming 24 wallets was not achievable in a working day.</p>
+  <p>The sub-wallets expose <code>serializeState()</code> / <code>restore()</code>, which solves it
+  completely &mdash; we measured warm-up dropping from <code>~386 s</code> to <code>~9 s</code>, a
+  6.5&times; improvement with no loss of correctness &mdash; but this is not documented as the
+  intended path and no example uses it.</p>
+  <p class="fix"><b>Suggested:</b> document snapshot/restore as the standard way to operate more than
+  one wallet, and investigate why concurrent cold syncs collapse rather than merely slow down.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> Single-client mempool ingest saturates near 2 tx/s</h3>
+  <p>A six-step rate ramp found <code>1016: Immediately Dropped &mdash; the transaction couldn't
+  enter the pool because of the limit</code> first appearing at 2 tx/s offered. Achieved throughput
+  peaks at <b>1.88 tx/s</b> and then degrades as offered load increases.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Offered tx/s</th><th>Achieved</th><th>Success</th><th>Failures</th></tr></thead>
+    <tbody>
+      <tr><td class="n">0.5</td><td class="n">0.48</td><td class="n good">81%</td><td>&mdash;</td></tr>
+      <tr><td class="n">1</td><td class="n">0.94</td><td class="n good">97%</td><td>&mdash;</td></tr>
+      <tr><td class="n">2</td><td class="n">1.68</td><td class="n">82%</td><td class="n">1016 &times;21, 196 &times;14</td></tr>
+      <tr><td class="n">3</td><td class="n"><b>1.88</b></td><td class="n bad">64%</td><td class="n">1016 &times;72, 196 &times;52</td></tr>
+      <tr><td class="n">4</td><td class="n">1.80</td><td class="n bad">56%</td><td class="n">1016 &times;128, 196 &times;63</td></tr>
+      <tr><td class="n">6</td><td class="n">1.68</td><td class="n bad">56%</td><td class="n">1016 &times;113, 196 &times;77</td></tr>
+    </tbody>
+  </table></div>
+  <p>The curve does not merely plateau &mdash; it <b>rolls over</b>. Throughput peaks at
+  <code>1.88 tx/s</code> at 3 offered, then <em>declines</em> to 1.80 and 1.68 as offered load rises,
+  while pool rejections climb from 72 to 128. Past saturation, additional offered load makes the
+  system deliver <b>less</b>. That is congestion collapse rather than a clean ceiling, and it means a
+  client tuned by pushing harder will land in a worse place than one tuned by backing off.</p>
+  <p><code>196</code> (<code>InvalidError::DustDoubleSpend</code>) rises in lockstep with offered
+  load &mdash; 14, 52, 63, 77 across the ramp. Two in-flight transactions from one wallet select the
+  same dust coin because the first spend is not yet reflected in wallet state. It is a client-side
+  race, but it is provoked by the same pressure, and it compounds the ceiling.</p>
+  <p class="fix"><b>Open question for MNF:</b> is this limit per-connection, per-peer, or global? It
+  caps single-source load at roughly 11 transfers per block &mdash; <b>4.3% of the byte budget, about
+  15% of the write budget</b> for the shape we used &mdash; regardless of client resources. If it is
+  per-connection, distributed submission bypasses it; if global, no client can fill blocks alone.
+  We could not determine this from outside, and it is now the <b>single most important unknown</b>
+  &mdash; with shielded working on ledger-9, it is the remaining barrier to a 50% run.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> <code>submitTransaction</code> hardcodes <code>Finalized</code></h3>
+  <p>The facade always waits for finality. Measured, that is <code>~19 s</code> of a <code>~23 s</code>
+  cycle &mdash; the dominant cost for a load generator that does not need it. The underlying service
+  accepts <code>'Submitted' | 'InBlock' | 'Finalized'</code>, but the public method exposes no
+  parameter. Reaching past the facade cut our cycle <b>6&times;</b>, from 23 s to 3.8 s.</p>
+  <p class="fix"><b>Suggested:</b> expose the wait mode on the public API. Still present on
+  <code>wallet-sdk</code> 2.0.0-beta.2 &mdash; stagenet submits also cost ~18.6 s.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> <code>signRecipe</code> is required for transfers and breaks registrations</h3>
+  <p>Unshielded transfers must call <code>signRecipe</code> before <code>finalizeRecipe</code>;
+  omitting it yields <code>Custom error: 192</code>
+  (<code>InputsSignaturesLengthMismatch</code>). But <code>registerNightUtxosForDustGeneration</code>
+  and <code>deregisterFromDustGeneration</code> already sign internally, so calling
+  <code>signRecipe</code> there double-signs and produces <b>the same error code 192</b> from the
+  opposite cause. All seven of our registrations failed this way.</p>
+  <p class="fix"><b>Suggested:</b> distinct error codes for missing versus surplus signatures, and
+  documentation of which recipes are pre-signed. <code>finalizeRecipe</code> proving but not signing
+  is a sharp edge that costs hours to find.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> Errors are catch-alls that hide the cause behind an Effect symbol</h3>
+  <p><code>"Transaction submission error"</code> and <code>"Failed to prove transaction"</code> carry
+  no diagnostic content. The real cause &mdash; the node's rejection code &mdash; sits several levels
+  down a cause chain, and for anything through <code>runPromise</code> it hangs off a
+  <b>symbol</b> rather than <code>.cause</code>, so ordinary unwrapping walks straight past it.</p>
+  <p>Every substantive diagnosis in this exercise required writing a custom unwrapper first. Once we
+  had one, error 192 was identified in minutes.</p>
+  <p class="fix"><b>Suggested:</b> surface the ledger error code on the thrown error.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> The indexer computes block fullness and discards it</h3>
+  <p><code>ledgerParameters</code> is exposed only as opaque hex, so external tooling cannot read the
+  real block limits &mdash; which is precisely how the stock 200,000-byte default goes unnoticed while
+  the chain runs at 1,000,000, and how a fee price sitting on <code>MIN_COST</code> goes unnoticed
+  entirely. The indexer already computes <code>block_fullness</code> internally and throws it away,
+  leaving <code>block_usage</code> as the only externally derivable dimension of five.</p>
+  <p class="fix"><b>Suggested:</b> expose <code>block_fullness</code>, decoded limits, and
+  <code>overall_price</code>. Every finding in the fee section above required decoding opaque hex
+  with the ledger WASM to obtain numbers the indexer already holds.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> Rate limiting is undocumented and disproportionate</h3>
+  <p>Measured thresholds: clean at <code>&le;0.25 req/s</code> serial, sporadic 403s from
+  <code>~4.6 req/s</code>, hard IP block at <code>~12 req/s</code> sustained, recovering after 1&ndash;3
+  minutes of quiet. The block covers indexer, RPC and faucet over <b>both HTTP and WebSocket</b>.</p>
+  <p>Because sync runs over the WebSocket, a rate-limited IP cannot sync wallets at all &mdash; and
+  combined with <code>shouldRetry: false</code> above, a momentary limit permanently kills every
+  wallet in the process.</p>
+</div>
+
+<div class="card med">
+  <h3><span class="chip med">Medium</span> Undocumented breaks in the ledger-9 migration</h3>
+  <p>Each of these cost time and none are in the partner document.</p>
+  <ul>
+    <li><code>createKeystore</code> now takes <code>{kind, secret}</code>, not raw bytes, and
+    <code>kind</code> is an explicit <code>'schnorr' | 'ecdsa'</code>. The wrong value silently
+    derives a <b>different address</b> &mdash; a fund-losing default. <code>'schnorr'</code> is the
+    ledger-8-compatible choice.</li>
+    <li>Private-state passwords now require 3 of 4 character classes, not just length &ge; 16.
+    Existing passphrases fail at deploy time with <code>Found: 2</code>.</li>
+    <li>The ledger package is <code>@midnightntwrk/ledger-v9</code> &mdash; no hyphen, unlike every
+    other package.</li>
+    <li>Proof server 9.x dropped <code>--network</code>; the only flag is <code>--num-workers</code>,
+    so ledger-8 launch commands fail outright.</li>
+    <li><code>compactc 0.33.0-rc.2</code>, the version the document specifies, was never published to
+    the compact release channel &mdash; <code>compact update 0.33</code> fails with
+    <code>No version matching 0.33 found</code>. The lowest installable toolchain is
+    <b>0.34.0</b> (runtime 0.19.0), which pairs with <code>midnight-js 5.0.0-beta.7</code>, not the
+    document's beta.4.</li>
+    <li>New in 5.x: a Terms &amp; Conditions flow
+    (<code>WalletFacade.fetchTermsAndConditions</code>) returning a live hash and URL.</li>
+  </ul>
+  <p class="fix"><b>Suggested:</b> publish a migration note and correct the version matrix. The one
+  thing that <em>is</em> right and load-bearing: all three of wallet-sdk, midnight-js and the
+  contract toolchain agree on <code>ledger-v9 1.0.0-rc.3</code>, so only one copy of the ledger WASM
+  is installed. That was the failure mode on the ledger-8 line and it is worth stating explicitly.</p>
+</div>
+
+<h2>What it would take to reach 50%</h2>
+<p>The fee curve crosses at exactly 50%, so this remains the minimum bar for the experiment to
+produce any signal &mdash; and the table above shows it must then be <em>held</em>, not merely
+touched.</p>
+<ul>
+  <li><b>Move to ledger-9.</b> This supersedes "fix error 170". Shielded transfers work there, and a
+  single 68-output shielded transfer clears the crossover on its own &mdash; one of two routes that
+  sidestep the mempool ceiling.</li>
+  <li><b>The mempool question is no longer the blocker.</b> It capped the <em>plain-transfer</em>
+  approach at about 15% write fullness because 50% needed ~36 transactions per block against an
+  ingest ceiling of ~11. A 68-output shielded transfer needs <b>one</b>; 16-output unshielded transfers
+  need <b>four</b>. The open question of whether
+  <code>1016</code> is per-connection or global still matters for other workloads, but it no longer
+  stands between us and a 50% run.</li>
+  <li><b>Use write-heavy shapes, not plain transfers.</b> The cheapest is a many-output unshielded
+  transfer: 16 outputs reach 15.7% of the write budget for 1.6 s of proving, so <b>four per block</b>
+  cross 50% with ~7 s of proving per 6 s block &mdash; roughly two proving lanes and 0.67 tx/s of
+  submission, both comfortably inside every limit we measured. A 28 KB contract deployment is 58% on
+  the same dimension but needs <b>1.71 tx/block</b> and about <b>7 proving lanes</b>; a 68-output
+  shielded transfer is 57% but needs 56 s of proving each.</li>
+  <li><b>Staging a batch needs one NIGHT UTXO per transaction.</b> Pending dust is tracked per
+  DUST UTXO, and each NIGHT UTXO backs exactly one DUST UTXO, so a wallet can pre-prove as many
+  transactions as it has NIGHT UTXOs whose own dust covers a fee (verified on stagenet: six UTXOs,
+  six pre-proved transactions). Holding N consecutive blocks above 50% therefore needs N funded
+  UTXOs, in one wallet or several; the balancer selects the smallest coin first and sweeps crumb
+  UTXOs into every build, so the UTXOs should be equal-sized.</li>
+  <li><b>Budget for the hold, not the peak.</b> Reaching 50% is not the end of the experiment. At
+  60% fullness the price moves 0.41% per block; a convincing reading needs sustained load for
+  <em>hundreds</em> of blocks, not a burst.</li>
+  <li><b>Wallet operability.</b> Snapshot/restore should be the documented default; without it,
+  fleet operations are impractical.</li>
+</ul>
+
+<blockquote>
+  <p>The most useful correction in this exercise: our first capacity estimate was
+  <b>310 CPU cores</b> for 50% fullness. That figure was entirely an artifact of the stale proof
+  server. The real number is <b>26</b>. A single wrong container tag moved the projected cost of this
+  experiment by more than an order of magnitude.</p>
+</blockquote>
+
+<h2>What we did not establish</h2>
+<ul>
+  <li><b>Whether the chain sustains high fullness.</b> We never exceeded 32% on any dimension in a block of our own, and the 57&ndash;59% blocks on stagenet were single transactions. Block production was
+  metronomic throughout and showed no degradation.</li>
+  <li><b>Whether the price compounds over many consecutive blocks.</b> We measured the single-block
+  multiplier at three fullness levels and matched the specified curve to five significant figures, and
+  the source multiplies rather than re-derives &mdash; so <code>10 &rarr; 13.2</code> over 100 blocks
+  at 56.9% is arithmetic on a verified factor. But we never held fullness for more than one block at a
+  time, because that needs a funded NIGHT UTXO per block.</li>
+  <li><b>Whether mainnet's floor is intended.</b> It has held since block 1,197 of 2,393,873, which is
+  either deliberate or something nobody has had reason to look at. The remedy exists in the
+  <code>[v8]</code> parameter line; whether it is scheduled for mainnet is a question for the
+  engineering team.</li>
+  <li><b>Whether the mempool limit binds the network.</b> We measured one client against one node.</li>
+  <li><b>Why <code>231</code> appears at all</b> on the swap path, given the underlying cause is a
+  supply invariant. Two different checks reject the same illegal transaction depending on its shape.</li>
+  <li><b>What a full block costs a validator.</b> We have since decomposed all five cost dimensions
+  for 1,334 transactions, so the binding dimension is no longer a blind spot. What remains unmeasured
+  is node-side: block production and validation time, propagation, and state growth under sustained
+  full blocks. Every capacity figure here is ledger accounting, not a measurement of the node under
+  load.</li>
+</ul>
+
+<div class="foot">
+  Measurements from a Midnight preview load test and a stagenet ledger-9 validation, August&ndash;September
+  2026, plus a cost decomposition of 1,334 transactions across mainnet, preview and stagenet on
+  3 September 2026.
+  Harness: 24 wallets, local <code>proof-server</code> 8.1.0 and 9.0.0-rc.5 instances, split
+  HTTP/WebSocket proxy, snapshot-based wallet restore. Every figure here is measured on chain,
+  decoded from live <code>ledgerParameters</code>, or read from ledger source unless explicitly
+  marked as an estimate.
+</div>
+</div>

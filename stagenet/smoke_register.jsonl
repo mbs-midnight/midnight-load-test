@@ -1,0 +1,5 @@
+{"t":"2026-08-30T17:19:12.388Z","phase":"register","event":"proof_server","version":"listening (HTTP 404; 9.x serves no /version endpoint)"}
+{"t":"2026-08-30T17:19:24.054Z","phase":"register","event":"synced","nightCoins":1,"nightValue":"5000000000","registeredCoins":0,"shieldedCoins":0,"shieldedValue":"0","dustCoins":0,"dustPending":0,"dustSpeck":"0"}
+{"t":"2026-08-30T17:19:37.722Z","phase":"register","event":"proof_server","version":"listening (HTTP 404; 9.x serves no /version endpoint)"}
+{"t":"2026-08-30T17:19:49.808Z","phase":"register","event":"synced","nightCoins":1,"nightValue":"5000000000","registeredCoins":0,"shieldedCoins":0,"shieldedValue":"0","dustCoins":0,"dustPending":0,"dustSpeck":"0"}
+{"t":"2026-08-30T17:20:07.326Z","phase":"register","event":"registered","utxos":1,"txId":"00c9c010d0bc6561ba2959702dae1f6b07a2bd60528fa6e8a4cda9899bb4214b4e"}

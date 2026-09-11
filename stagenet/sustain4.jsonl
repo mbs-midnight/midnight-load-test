@@ -1,0 +1,10 @@
+{"t":"2026-09-03T20:09:19.235Z","phase":"sustain","event":"proof_server","version":"9.0.0-rc.5"}
+{"t":"2026-09-03T20:09:42.263Z","phase":"sustain","event":"synced","nightCoins":17,"nightValue":"5000000000","registeredCoins":17,"shieldedCoins":72,"shieldedValue":"1000000","dustCoins":17,"dustPending":0,"dustSpeck":"14546834195746095106"}
+{"t":"2026-09-03T20:09:42.264Z","phase":"sustain","event":"sustain_start","n":4,"outputsEach":50,"tokenType":"55dd57fbbaeb2c33cdbaca4c5428d297837df02171fe4aa4e98e5d605a61f6aa","dustCoins":17,"note":"ok"}
+{"t":"2026-09-03T20:10:43.105Z","phase":"sustain","event":"proved","i":0,"ms":60834,"ready":1,"bytes":555715}
+{"t":"2026-09-03T20:10:44.127Z","phase":"sustain","event":"prove_fail","i":1,"ms":1020,"error":"Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust"}
+{"t":"2026-09-03T20:10:44.762Z","phase":"sustain","event":"prove_fail","i":2,"ms":634,"error":"Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust"}
+{"t":"2026-09-03T20:10:45.397Z","phase":"sustain","event":"prove_fail","i":3,"ms":635,"error":"Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust | Insufficient Funds: could not balance dust"}
+{"t":"2026-09-03T20:10:45.397Z","phase":"sustain","event":"proved_all","ready":1}
+{"t":"2026-09-03T20:11:07.608Z","phase":"sustain","event":"released","i":0,"txId":"00c51d9e65ac15e9a668306176ef8b102fcc1e19a7479f8e7b98e72cd9a66f70bf","ms":22209}
+{"t":"2026-09-03T20:11:07.608Z","phase":"sustain","event":"sustain_done","proved":1,"ok":1,"fail":0}

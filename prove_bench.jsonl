@@ -1,0 +1,2 @@
+{"concurrency":4,"built":4,"ok":4,"firstErr":"","wallS":0.893,"p50S":0.852,"proofsPerSec":4.479283314669653,"t":"2026-08-28T22:09:21.170Z"}
+{"concurrency":8,"built":8,"ok":8,"firstErr":"","wallS":1.533,"p50S":1.154,"proofsPerSec":5.2185257664709725,"t":"2026-08-28T22:09:27.252Z"}

@@ -1,0 +1,22 @@
+name,source,k,rows,seconds,status,error
+BenchR1_S0,./BenchR1_S0.compact,,,1,ok,
+BenchR1024_S0,./BenchR1024_S0.compact,,,681,ok,
+BenchR128_S0,./BenchR128_S0.compact,,,220,ok,
+BenchR16_S0,./BenchR16_S0.compact,,,14,ok,
+BenchR2_S0,./BenchR2_S0.compact,,,1,ok,
+BenchR2048_S0,./BenchR2048_S0.compact,,,7725,ok,
+BenchR256_S0,./BenchR256_S0.compact,,,1469,ok,
+BenchR32_S0,./BenchR32_S0.compact,,,18,ok,
+BenchR4_S0,./BenchR4_S0.compact,,,2,ok,
+BenchR4096_S0,./BenchR4096_S0.compact,,,11313,failed,"Exception: zkir returned a non-zero exit status -9"
+BenchR512_S0,./BenchR512_S0.compact,,,2080,ok,
+BenchR64_S0,./BenchR64_S0.compact,,,35,ok,
+BenchR64_S1,./BenchR64_S1.compact,,,36,ok,
+BenchR64_S16,./BenchR64_S16.compact,,,35,ok,
+BenchR64_S2,./BenchR64_S2.compact,,,102,ok,
+BenchR64_S32,./BenchR64_S32.compact,,,207,ok,
+BenchR64_S4,./BenchR64_S4.compact,,,84,ok,
+BenchR64_S8,./BenchR64_S8.compact,,,203,ok,
+BenchR8_S0,./BenchR8_S0.compact,,,24,ok,
+BenchR8192_S0,./BenchR8192_S0.compact,,,26305,failed,"Exception: zkir returned a non-zero exit status -9"
+Probe,./Probe.compact,,,1,ok,

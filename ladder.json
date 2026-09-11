@@ -1,0 +1,102 @@
+[
+  {
+    "name": "BenchR4_S0",
+    "k": 14,
+    "rounds": 4,
+    "slots": 0,
+    "managedDir": "contracts/BenchR4_S0",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR64_S0",
+    "k": 18,
+    "rounds": 64,
+    "slots": 0,
+    "managedDir": "contracts/BenchR64_S0",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR64_S8",
+    "k": 18,
+    "rounds": 64,
+    "slots": 8,
+    "managedDir": "contracts/BenchR64_S8",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR64_S32",
+    "k": 18,
+    "rounds": 64,
+    "slots": 32,
+    "managedDir": "contracts/BenchR64_S32",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR1_S0",
+    "k": 19,
+    "rounds": 1,
+    "slots": 0,
+    "managedDir": "contracts/BenchR1_S0",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR2_S0",
+    "k": 19,
+    "rounds": 2,
+    "slots": 0,
+    "managedDir": "contracts/BenchR2_S0",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR8_S0",
+    "k": 19,
+    "rounds": 8,
+    "slots": 0,
+    "managedDir": "contracts/BenchR8_S0",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR16_S0",
+    "k": 19,
+    "rounds": 16,
+    "slots": 0,
+    "managedDir": "contracts/BenchR16_S0",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR32_S0",
+    "k": 19,
+    "rounds": 32,
+    "slots": 0,
+    "managedDir": "contracts/BenchR32_S0",
+    "circuitNames": [
+      "run"
+    ]
+  },
+  {
+    "name": "BenchR128_S0",
+    "k": 19,
+    "rounds": 128,
+    "slots": 0,
+    "managedDir": "contracts/BenchR128_S0",
+    "circuitNames": [
+      "run"
+    ]
+  }
+]

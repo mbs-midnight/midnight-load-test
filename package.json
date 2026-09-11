@@ -1,0 +1,52 @@
+{
+  "name": "midnight-dust-sweep-harness",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deploy generated benchmark circuits to Midnight Preprod and drive the DUST/fullness sweep through a hosted (Arkhia ZKPaas) proof server.",
+  "scripts": {
+    "preflight": "tsx src/preflight.ts",
+    "deploy": "tsx src/deploy.ts",
+    "load": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/load_test.ts",
+    "addresses": "tsx src/derive_addresses.ts",
+    "status": "tsx src/wallet_status.ts",
+    "diag:dust": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/diag_dust.ts",
+    "delegate": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/wallet_status.ts --delegate",
+    "test:ws": "tsx src/test_ws.ts",
+    "test:address": "tsx src/test_address.ts",
+    "test:sync": "tsx src/test_sync.ts",
+    "test:networks": "tsx src/test_networks.ts",
+    "split": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/flood.ts --phase split",
+    "deregister": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/flood.ts --phase deregister",
+    "register": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/flood.ts --phase register",
+    "churn": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/flood.ts --phase churn",
+    "audit": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/fleet_audit.ts",
+    "flood": "NODE_OPTIONS=--max-old-space-size=8192 tsx src/flood.ts --phase flood"
+  },
+  "//deps": "Use the @midnight-ntwrk/wallet-sdk BARREL package -- it re-exports the facade and all wallet sub-packages through one dependency. Do NOT depend on wallet-sdk-facade directly. The barrel pins compatible sub-package versions; if you override any of them individually you can desync ledger-8 vs ledger-9 and nothing will link.",
+  "dependencies": {
+    "@midnight-ntwrk/ledger-v8": "8.1.0",
+    "@midnight-ntwrk/midnight-js-contracts": "^4.0.0",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "^4.0.0",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "^4.0.0",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "^4.0.0",
+    "@midnight-ntwrk/midnight-js-network-id": "^4.0.0",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "^4.0.0",
+    "@midnight-ntwrk/midnight-js-types": "^4.0.0",
+    "@midnight-ntwrk/midnight-js-utils": "^4.0.0",
+    "@midnight-ntwrk/wallet-sdk": "^1.2.0",
+    "@scure/bip39": "^2.0.1",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "overrides": {
+    "@midnight-ntwrk/ledger-v8": "8.1.0"
+  },
+  "//overrides": "REQUIRED and must EXACTLY MATCH the direct dependency spec above, or npm fails with EOVERRIDE. midnight-js-protocol pins ledger-v8 to exactly 8.1.0 while the wallet SDK asks ^8.1.0 (=8.1.1); two copies then coexist and their WASM classes are nominally incompatible, breaking WalletProvider/MidnightProvider. Verify with: find node_modules -type d -name ledger-v8 (must print ONE path).",
+  "//wallet-sdk-version": "PIN TO THE 1.x LINE. Do NOT upgrade to @midnight-ntwrk/wallet-sdk@2.0.0-beta.2: (1) wallet-sdk-facade@5.0.0-beta.2 imports Clock from wallet-sdk-utilities but does not declare that package as a dependency, so the import fails at runtime even on a clean install; (2) the beta moved to @midnightntwrk/ledger-v9, which cannot coexist with midnight-js v4's ledger-v8 pin."
+}

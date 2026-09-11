@@ -1,0 +1,31 @@
+# ---- secrets: never track ----
+.env
+.env.*
+wallets.json
+wallets_addresses.json
+*wallet*.json
+*fleet*.json
+fleet.csv
+fund_list.txt
+*.mnemonics
+*seeds*.json
+.wallet-state/
+.mnstate/
+HALT
+
+# ---- local state, caches, generated ----
+node_modules/
+.cache/
+midnight-level-db/
+report/
+*.log
+*.err
+*.bak
+*.bak-*
+run_meta.json
+artifacts.csv
+
+# ---- compiled contract artifacts (keys/zkir run to gigabytes; regenerate with compact) ----
+contracts/*/
+!contracts/compile_log.csv
+stagenet/contract/src/managed/
