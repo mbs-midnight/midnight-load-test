@@ -606,8 +606,39 @@ does not provide an export named 'Clock'</code></pre>
   <p class="fix"><b>Workaround:</b> an npm override to <code>1.2.1</code>, whose exports are a strict
   superset. <b>Already fixed upstream:</b> the newest v2 canary,
   <code>2.0.0-canary.20260730145109-1cf94a3</code>, pins <code>utilities@1.2.2-canary</code> and
-  installs and imports cleanly with no override. <b>Suggested:</b> cut that as beta.3 &mdash; the
-  published <code>beta</code> tag is currently unusable as shipped.</p>
+  installs and imports cleanly with no override. <b>Fixed in 2.0.0-beta.3</b> (published since this
+  was first written): it pins <code>utilities@1.2.2-beta.0</code> and a clean install imports without an
+  override &mdash; verified with <code>repro/01-wallet-sdk-beta2-install.sh</code> against beta.2 and a
+  fresh <code>stagenet-next/</code> install of beta.3.</p>
+</div>
+
+<div class="card high">
+  <h3><span class="chip high">High</span> <code>wallet-sdk@2.0.0-beta.3</code> cannot sync an unshielded wallet against the indexer stagenet runs today</h3>
+  <p>Re-running the reproductions on the newest published stack (wallet-sdk 2.0.0-beta.3, midnight-js
+  5.0.0-beta.8, ledger-v9 1.0.0-rc.4) stopped at the first transaction: every attempt failed with
+  <code>Wallet.InsufficientFunds</code> for NIGHT on a wallet holding 5,000 NIGHT. The unshielded wallet
+  had never connected. Its subscription is rejected by the indexer:</p>
+  <pre><code>Wallet.Sync: Unknown field "protocolVersion" on type "UnshieldedTransactionsProgress".</code></pre>
+  <p>The beta.3 indexer client (<code>wallet-sdk-indexer-client</code> 2.0.0-beta.2) asks for
+  <code>protocolVersion</code> on every progress update. That field was added to the indexer by
+  <code>midnightntwrk/midnight-indexer</code> #1463 on 2026-09-02 and is in no indexer release tag as of
+  2026-09-14; stagenet's indexer serves <code>UnshieldedTransactionsProgress { highestTransactionId }</code>
+  only. The shielded and dust subscriptions still sync, so the wallet reports itself connected on two of
+  three sub-wallets and simply has no NIGHT. beta.2's client does not request the field and works.</p>
+  <p>Porting the harness to beta.3 also met three unannounced API changes:
+  <code>ShieldedWallet(c).startWithSecretKeys(keys)</code> and
+  <code>DustWallet(c).startWithSecretKey(key)</code> are gone in favor of epoch-forking
+  <code>startWithSeed(seed)</code> / <code>startWithKeys({ v8, v9 })</code>;
+  <code>facade.start(zswapKeys, dustKey)</code> became <code>facade.start(WalletSeeds.fromMasterSeed(seed))</code>;
+  and <code>transferTransaction</code> / <code>initSwap</code> dropped their <code>secretKeys</code> argument,
+  so the old three-argument call silently treats the keys object as options. The facade state is now
+  <code>{ protocolVersion, state }</code> per sub-wallet.</p>
+  <p class="fix"><b>Suggested:</b> either deploy an indexer with #1463 wherever beta.3 is meant to be used,
+  or have the client tolerate a schema without the field. Until then the newest beta cannot transact on
+  stagenet, which also means the wallet-side defects above could only be re-verified on beta.2. What we
+  could check statically on beta.3: the facade still calls <code>submitTransaction(tx, 'Finalized')</code>
+  and ledger-v9 rc.4 still takes the enforcement flag as optional. Reproduction:
+  <code>stagenet-next/repro/diag-state.ts</code>.</p>
 </div>
 
 <div class="card med">
@@ -662,7 +693,8 @@ does not provide an export named 'Clock'</code></pre>
   argue. A throwaway wallet was pointed at a local WebSocket endpoint that (a) accepts and closes
   immediately, (b) rejects the upgrade with HTTP 403, as the rate limiter does, and (c) proxies to the
   real indexer for 20 s and then drops and refuses. In all three cases every sub-wallet reconnected on
-  an exponential schedule &mdash; 1, 2, 4, 8, 16, 32, 64 s after the failure &mdash; and the source
+  an exponential schedule &mdash; 1, 2, 4, 8, 16, 32, 64 s after the failure, on beta.2 and again on
+  beta.3 &mdash; and the source
   (<code>RunningV1Variant.js</code>, <code>Schedule.exponential(1 s, 2)</code>, jittered, capped at
   2 minutes) shows it does not give up. The same schedule is present in the
   <code>dust-wallet</code> 4.1.0 that <code>wallet-sdk</code> 1.1.0 pinned, so it was there during our

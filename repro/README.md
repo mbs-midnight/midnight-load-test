@@ -10,6 +10,14 @@ and exits 0 (reproduced), 1 (not reproduced), or 2 (skipped: prerequisite
 missing or not confirmed). Nothing here creates, prints or commits a secret;
 wallet-side scripts read `stagenet/.env.stagenet` the same way the harness does.
 
+Two stacks are installed side by side. `stagenet/` is the 30 August pin set
+(wallet-sdk 2.0.0-beta.2, midnight-js 5.0.0-beta.7, ledger-v9 1.0.0-rc.3) and
+`stagenet-next/` is the newest published set (wallet-sdk 2.0.0-beta.3,
+midnight-js 5.0.0-beta.8, ledger-v9 1.0.0-rc.4). `stagenet-next/repro/` is a copy
+of `stagenet/repro/`; the wallet scripts go through `transferTx` / `swapTx` in each
+directory's `src/wallet.ts`, which absorbs the beta.2 → beta.3 API differences.
+Run the same script from either directory to test either stack.
+
 ```bash
 ./repro/run.sh                # groups A + B: no prerequisites, ~1 minute
 ./repro/run.sh --wallet       # + group C: funded stagenet wallet + local proof server
@@ -72,3 +80,29 @@ reproduced by `stagenet/price_watch.mjs`, `stagenet/harvest.mjs` and the
 | D2 | **not reproduced, retracted** | identical flag sets on 7.0.0-rc.1, 8.1.0 and 9.0.0-rc.5; `--network` never existed |
 | 01 | reproduced | clean install resolves `utilities@1.2.0`, import fails on `Clock`; override to 1.2.1 → `IMPORT_OK` |
 | E1–E4 | not run | manual, `--confirm` |
+
+## Results on the newest stack, 2026-09-14
+
+`stagenet-next/`: wallet-sdk 2.0.0-beta.3, midnight-js 5.0.0-beta.8, ledger-v9 1.0.0-rc.4, proof server 9.0.0-rc.5.
+
+| # | Outcome on beta.3 | Evidence |
+|---|---|---|
+| 01 | **fixed** | beta.3 pins `wallet-sdk-utilities@1.2.2-beta.0`; a clean install imports with no override |
+| A1 | reproduced | unchanged |
+| A2 | reproduced | `midnight-js-utils` 5.0.0-beta.8 still requires 3 character classes |
+| B1 | reproduced | indexer-side, independent of SDK |
+| B2 | reproduced | 143 of 189 lines differ; same 29 KB call: genesis 1.882 DUST, live 0.190, charged 0.189 |
+| B3 | retracted, unchanged | reconnects at 1, 2, 4, 8, 16, 32, 64 s in `close` and `403` modes |
+| C1–C4 | **blocked** | the beta.3 indexer client requests `protocolVersion` on `UnshieldedTransactionsProgress`; the stagenet indexer serves only `highestTransactionId`, so the unshielded wallet never syncs (`isConnected=false`, 0 NIGHT) and no transaction can be built. Static checks: facade 5.0.0-beta.3 still calls `submitTransaction(tx, 'Finalized')`; ledger-v9 rc.4 still takes the enforce flag as optional |
+
+The C-group blocker is itself a finding. The field was added to the indexer by
+midnightntwrk/midnight-indexer #1463 on 2026-09-02 and is in no indexer release
+tag as of 2026-09-14; wallet-sdk 2.0.0-beta.3 (indexer-client 2.0.0-beta.2)
+already requires it. Until stagenet's indexer is redeployed, beta.3 cannot
+transact there. `stagenet-next/repro/diag-state.ts` shows the failing
+subscription and the new `{ protocolVersion, state }` shape of the facade state.
+
+Other beta.2 → beta.3 breaks met while porting (`stagenet-next/src/wallet.ts`):
+`ShieldedWallet(c).startWithSecretKeys` → `startWithSeed` / `startWithKeys({v8, v9})`;
+`facade.start(zswapKeys, dustKey)` → `facade.start(WalletSeeds.fromMasterSeed(seed))`;
+`transferTransaction` / `initSwap` dropped their `secretKeys` argument.

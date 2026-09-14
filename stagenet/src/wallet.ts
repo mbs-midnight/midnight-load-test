@@ -237,6 +237,22 @@ export async function waitForRealSync(
   });
 }
 
+/**
+ * Version-agnostic transaction builders. wallet-sdk 2.0.0-beta.2 takes the
+ * secret keys on every transferTransaction/initSwap call; beta.3 holds them
+ * from start() and takes only options. The repro scripts call these so the same
+ * script runs against both stacks (../stagenet vs ../stagenet-next).
+ */
+export const SDK_LINE = 'wallet-sdk 2.0.0-beta.2';
+export function transferTx(b: WalletBundle, outputs: any[], opts: { ttl: Date; payFees?: boolean }) {
+  return b.wallet.transferTransaction(outputs as any,
+    { shieldedSecretKeys: b.zswapSecretKeys, dustSecretKey: b.dustSecretKey }, opts as any);
+}
+export function swapTx(b: WalletBundle, inputs: any, outputs: any[], opts: { ttl: Date; payFees?: boolean }) {
+  return b.wallet.initSwap(inputs, outputs as any,
+    { shieldedSecretKeys: b.zswapSecretKeys, dustSecretKey: b.dustSecretKey }, opts as any);
+}
+
 /** Walk an Effect Cause / nested error to something printable. */
 export function describeError(e: any): string {
   const seen = new Set<any>();

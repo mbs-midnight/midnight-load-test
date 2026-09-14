@@ -1,0 +1,28 @@
+{
+  "name": "midnight-stagenet-next",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The NEWEST published 2.0 stack, installed side by side with ../stagenet (the 2026-08-30 pins) so the defect reproductions in repro/ can be re-run against current packages before anything is reported as a bug.",
+  "//versions": "wallet-sdk 2.0.0-beta.3 pins @midnightntwrk/ledger-v9 1.0.0-rc.4 and wallet-sdk-utilities 1.2.2-beta.0; midnight-js 5.0.0-beta.8. No utilities override: this install is also the test of whether beta.3 still needs one.",
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "0.19.0",
+    "@midnight-ntwrk/midnight-js-contracts": "5.0.0-beta.8",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "5.0.0-beta.8",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "5.0.0-beta.8",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "5.0.0-beta.8",
+    "@midnight-ntwrk/midnight-js-network-id": "5.0.0-beta.8",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "5.0.0-beta.8",
+    "@midnight-ntwrk/midnight-js-types": "5.0.0-beta.8",
+    "@midnight-ntwrk/midnight-js-utils": "5.0.0-beta.8",
+    "@midnight-ntwrk/wallet-sdk": "2.0.0-beta.3",
+    "@scure/bip39": "^2.0.1",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
