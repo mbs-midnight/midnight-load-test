@@ -492,7 +492,7 @@ ported the harness to the Midnight 2.0 stack and re-ran the paths that matter ag
     <tr><td>Contract deploy</td><td class="good">works</td><td class="n">24.0 s</td></tr>
     <tr><td>Contract call (shielded mint)</td><td class="good">works</td><td><code>SucceedEntirely</code></td></tr>
     <tr><td><b>Shielded transfer</b></td><td class="good"><b>works &mdash; 4/4</b></td><td class="n">prove 4.1&ndash;4.9 s; coins 1&rarr;4 on chain, value conserved</td></tr>
-    <tr><td>Shielding NIGHT (<code>initSwap</code>)</td><td>n/a by design</td><td>ledger invariant &mdash; NIGHT is not shieldable</td></tr>
+    <tr><td>Shielding NIGHT (<code>initSwap</code>)</td><td class="bad">fails</td><td><code>231</code> (guaranteed section too costly to dismiss) or <code>199</code> (NIGHT supply invariant) &mdash; see defects</td></tr>
   </tbody>
 </table></div>
 
@@ -536,8 +536,8 @@ means ~47 s of proving per 6 s of chain time, or roughly <b>8 concurrent proving
 
 <p>It also removes the faucet from the critical path. A minting contract issues arbitrary amounts of
 a shielded token to arbitrary keys, so a fleet can be bootstrapped for a shielded flood without a
-faucet and without any NIGHT-shielding step &mdash; which is fortunate, since that step is closed by
-construction.</p>
+faucet and without any NIGHT-shielding step &mdash; which is fortunate, since that step does not
+work in practice today.</p>
 
 <h2>Defects</h2>
 
@@ -555,8 +555,8 @@ construction.</p>
   <code>1f1a2c72&hellip;</code> (Lace-sent) and the stagenet wallet holds <code>55dd57fb&hellip;</code>
   from a contract we deployed. Both are derived
   <code>tokenType(domain_sep, contract_address)</code> hashes. Native NIGHT could not have been the
-  variable in either case &mdash; see the invariant below, which has existed since ledger
-  <code>6.1.0-alpha.2</code>.</p>
+  variable in either case &mdash; NIGHT swaps fail on both networks, see the <code>initSwap</code>
+  card below.</p>
   <p class="fix"><b>Consequence:</b> no fix is needed on the ledger-9 path, and no 1.x workaround
   should be carried forward. For anyone still on ledger-8, shielded remains unusable from the SDK.
   <b>Verified on:</b> <code>wallet-sdk</code> 2.0.0-beta.2 + <code>midnight-js</code> 5.0.0-beta.7 +
@@ -564,33 +564,34 @@ construction.</p>
 </div>
 
 <div class="card med">
-  <h3><span class="chip med">Medium</span> <code>initSwap</code> offers an operation the ledger forbids by design</h3>
-  <p>To be clear about what this is and is not: <b>NIGHT is not meant to be shieldable</b>, and the
-  ledger is behaving correctly. This is an API-ergonomics defect, not a protocol one, and we
-  originally filed it too high.</p>
-  <p>Moving NIGHT from the unshielded pool into the shielded pool is rejected by the node every time.
-  A small transaction returns <code>231</code>
-  (<code>FeeCalculation(OutsideTimeToDismiss)</code>); a larger one returns <code>199</code>, which
-  names the real cause &mdash; <code>InvariantViolation::NightBalance</code>:</p>
-  <pre><code>pub fn check_night_balance_invariant(&amp;self) -&gt; Result&lt;(), InvariantViolation&gt; {
-    let total_night = utxo_ann.value + self.locked_pool + self.reserve_pool
-        + self.block_reward_pool + treasury_night + unclaimed_rewards + contract_value;
-    if total_night != MAX_SUPPLY { Err(InvariantViolation::NightBalance(total_night)) }</code></pre>
-  <p>The supply accounting sums unshielded UTXOs, the pools, treasury, unclaimed rewards and contract
-  value. <b>There is no shielded/zswap term.</b> Shielding NIGHT reduces <code>utxo_ann.value</code>
-  with nothing to compensate, so the invariant fails by construction. Contract-minted shielded tokens
-  are unaffected &mdash; they shield and transfer normally.</p>
-  <p>This is not new in ledger-9. <code>check_night_balance_invariant</code> dates to the initial
-  import at <code>6.1.0-alpha.2</code> (2025-09-05), so <b>NIGHT has never been shieldable</b> on
-  preview either. Any shielded balance on any of these networks is necessarily a user-created
-  token.</p>
-  <p class="fix"><b>The defect is the API surface, not the rule.</b> The SDK exposes
-  <code>initSwap</code> for NIGHT with no guard, so a caller builds, signs, proves and submits a
-  transaction the chain can never accept &mdash; paying the proving cost &mdash; and then receives a
-  fee-calculation error code (<code>231</code>) that points nowhere near the cause.
-  <b>Suggested:</b> reject the native token in <code>initSwap</code> client-side with an explicit
-  message, and state in the docs that NIGHT is unshieldable by design. <b>Reproduced</b> 6/6 across
-  TTLs of 1 h / 10 min / 5 min, output counts 1 / 4 / 8, and 5.4&times; transaction padding.</p>
+  <h3><span class="chip med">Medium</span> <code>initSwap</code> with NIGHT fails on every network, for two different reasons</h3>
+  <p>Moving NIGHT from the unshielded pool into the shielded pool is rejected by the node every time we
+  tried. A small transaction returns <code>231</code>
+  (<code>FeeCalculation(OutsideTimeToDismiss)</code>); a larger one returns <code>199</code>
+  (<code>InvariantViolation::NightBalance</code>). <b>Reproduced</b> 6/6 across TTLs of
+  1 h / 10 min / 5 min, output counts 1 / 4 / 8, and 5.4&times; transaction padding.</p>
+  <p><b>Reviewer feedback</b> (Midnight architecture, September 2026) corrects our original reading.
+  There is no design intent to forbid swapping NIGHT, which is why the API offers it. The practical
+  obstacle is the <b>guaranteed section</b>: a swap places the NIGHT offer there, and NIGHT transfers of
+  almost any shape cost more to validate than the per-byte time-to-dismiss allowance permits, so the
+  transaction is refused before it is ever applied. That is the <code>231</code> we saw on small
+  transactions, and it is why padding the transaction with cheap bytes came closest to getting through.</p>
+  <p>The <code>199</code> on larger transactions is a separate check that we think still deserves a
+  look. <code>check_night_balance_invariant</code> in <code>ledger/src/semantics.rs</code> requires</p>
+  <pre><code>utxo_ann.value + locked_pool + reserve_pool + block_reward_pool
+    + treasury_night + unclaimed_rewards + contract_value  ==  MAX_SUPPLY</code></pre>
+  <p>and none of those terms is the shielded pool, so a transaction that does clear the guaranteed
+  section and moves NIGHT into Zswap would reduce <code>utxo_ann.value</code> with nothing to
+  compensate. The public <code>midnight-ledger</code> main (last commit 2026-03-30) still reads this
+  way. If NIGHT swaps are meant to work, the invariant needs a Zswap term; if they are not, the API
+  is offering something the ledger will always reject. Either way, the check dates to
+  <code>6.1.0-alpha.2</code> (2025-09-05), so no NIGHT has ever been shielded on preview or stagenet,
+  and every shielded balance on these networks is a user-created token.</p>
+  <p class="fix"><b>Suggested:</b> confirm which of the two outcomes is intended. In the meantime the
+  SDK lets a caller build, sign, prove and submit a NIGHT swap the chain will refuse, paying the proving
+  cost, and the <code>231</code> it gets back points at fee calculation rather than the cause. A
+  client-side guard or a documented "not currently possible" would save the next team the same
+  hours.</p>
 </div>
 
 <div class="card blocker">
@@ -609,23 +610,29 @@ does not provide an export named 'Clock'</code></pre>
   published <code>beta</code> tag is currently unusable as shipped.</p>
 </div>
 
-<div class="card high">
-  <h3><span class="chip high">High</span> Client-side fee checks run against the wrong cost model, with the wrong flag</h3>
-  <p>Two independent gaps let a client believe a transaction is priceable when the node disagrees.</p>
+<div class="card med">
+  <h3><span class="chip med">Medium</span> Client-side fee checks: the enforcement flag is off by default, and older tooling prices from genesis</h3>
   <p><b>The flag.</b> In <code>ledger-wasm/src/tx.rs</code>, both <code>cost()</code> and
   <code>fees()</code> resolve their enforcement argument as
-  <code>enforce_time_to_dismiss.unwrap_or(false)</code>. The check the node applies is therefore
-  <em>off by default</em> in the binding every wallet uses.</p>
-  <p><b>The model.</b> <code>LedgerParameters.initialParameters()</code> &mdash; the genesis defaults
-  the SDK reaches for &mdash; is not what either chain runs. Diffed against live parameters it
-  disagrees in <b>143 lines</b> on stagenet and <b>142</b> on preview, across the per-operation cost
-  model. The <code>time_to_dismiss</code> limits and the DUST parameters <em>do</em> match exactly;
-  it is specifically the cost model that diverges. On one live transaction the same fee computed
-  <b>4.92 DUST</b> against genesis and <b>1.80 DUST</b> against the chain.</p>
-  <p class="fix"><b>Suggested:</b> default the enforcement flag to <code>true</code>, and have the
-  SDK fetch live <code>ledgerParameters</code> rather than defaulting to genesis for anything a user
-  will see as a fee estimate. Applications that trust <code>initialParameters()</code> are quoting
-  fees from a model no network is running.</p>
+  <code>enforce_time_to_dismiss.unwrap_or(false)</code>, so the time-to-dismiss check the node applies
+  is <em>off by default</em> in the binding every wallet uses. Reviewer feedback is that this is worth
+  filing and is very likely already fixed. We could not confirm the fix from source: the public
+  <code>midnight-ledger</code> repository has not moved since 2026-03-30, while
+  <code>ledger-v9</code> 1.0.0-rc.4 and rc.5 shipped on 2026-08-11 and 2026-09-14 from a tree we cannot
+  see. The rc.5 JavaScript binding still passes the flag through as optional, which tells us nothing
+  about the compiled default. <b>Filed as a question, not a confirmed defect.</b></p>
+  <p><b>The model.</b> <code>LedgerParameters.initialParameters()</code>, the genesis defaults compiled
+  into the SDK, is not what any network runs: diffed against live parameters it disagrees in
+  <b>143 lines</b> on stagenet and <b>142</b> on preview, and on one live transaction the same fee came
+  out at <b>4.92 DUST</b> against genesis and <b>1.80 DUST</b> against the chain. On the
+  <code>wallet-sdk</code> 2.0 line this is already handled: the dust wallet deserializes
+  <code>ledgerParameters</code> from synced block data and prices fees from that, using
+  <code>initialParameters()</code> only as a fallback for the dust grace period. The exposure is now
+  confined to tooling that calls <code>initialParameters()</code> directly, which included our own
+  ledger-8 harness.</p>
+  <p class="fix"><b>Suggested:</b> confirm the default of the enforcement flag in the current ledger
+  tree, and note in the SDK docs that <code>initialParameters()</code> is a genesis constant, not a
+  fee-estimation input.</p>
 </div>
 
 <div class="card high">
@@ -650,10 +657,19 @@ does not provide an export named 'Clock'</code></pre>
   throughput for the remaining six minutes with no error surfaced.</p>
   <p>This interacts badly with rate limiting. A brief 403 does not degrade a long run &mdash; it ends
   it, and from the client an idle chain and a dead connection look identical.</p>
-  <p class="fix"><b>Suggested:</b> bounded retry with backoff, or at minimum an observable
-  disconnected state. We had to build an external watchdog that detects stalled progress and rebuilds
-  the wallet, because <code>isConnected</code> keeps reporting <code>true</code> after
-  <code>stop()</code>.</p>
+  <p><b>Confirmed present, and narrow.</b> Reviewer feedback is that the wallet SDK has retry
+  capabilities and that this should not happen; we checked where they are. The node RPC client
+  (<code>PolkadotNodeClient</code>) reconnects on a one-second schedule with no timeout, and the prover
+  client retries 502/503/504. The indexer <em>subscription</em> client does not:
+  <code>packages/indexer-client/src/effect/WsSubscriptionClient.ts</code> constructs graphql-ws with
+  <code>shouldRetry: () =&gt; false</code> in <code>wallet-sdk-indexer-client</code> 1.2.3 (our ledger-8
+  harness), 1.3.0-beta.1 (the 2.0 stack), and on <code>midnight-wallet</code> main as of 2026-09-14
+  (commit <code>f4e18fdc</code>). Sync runs over that subscription, so the one client without a retry is
+  the one every wallet depends on.</p>
+  <p class="fix"><b>Suggested:</b> give the subscription client the same reconnection schedule the node
+  client already has, or at minimum an observable disconnected state. We had to build an external
+  watchdog that detects stalled progress and rebuilds the wallet, because <code>isConnected</code>
+  keeps reporting <code>true</code> after <code>stop()</code>.</p>
 </div>
 
 <div class="card high">
