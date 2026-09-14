@@ -620,7 +620,11 @@ does not provide an export named 'Clock'</code></pre>
   <code>midnight-ledger</code> repository has not moved since 2026-03-30, while
   <code>ledger-v9</code> 1.0.0-rc.4 and rc.5 shipped on 2026-08-11 and 2026-09-14 from a tree we cannot
   see. The rc.5 JavaScript binding still passes the flag through as optional, which tells us nothing
-  about the compiled default. <b>Filed as a question, not a confirmed defect.</b></p>
+  about the compiled default. We also tried to show the default mattering in practice and could not:
+  on every NIGHT swap we can build today, <code>cost(params, true)</code> passes just like
+  <code>cost(params)</code>, and the node then rejects the proven transaction with <code>199</code>
+  rather than the <code>231</code> we saw in August, so no current transaction distinguishes the two
+  settings. <b>Filed as a question, not a confirmed defect.</b></p>
   <p><b>The model.</b> <code>LedgerParameters.initialParameters()</code>, the genesis defaults compiled
   into the SDK, is not what any network runs: diffed against live parameters it disagrees in
   <b>143 lines</b> on stagenet and <b>142</b> on preview, and on one live transaction the same fee came
@@ -649,27 +653,28 @@ does not provide an export named 'Clock'</code></pre>
   This single misconfiguration invalidated three of our intermediate conclusions.</p>
 </div>
 
-<div class="card high">
-  <h3><span class="chip high">High</span> A single refused WebSocket permanently retires a wallet, silently</h3>
-  <p><code>wallet-sdk-indexer-client</code> creates its graphql-ws client with
-  <code>shouldRetry: () =&gt; false</code>. One refused connect is unrecoverable: the wallet sits at
-  <code>isConnected=false</code> forever and raises nothing. In one run both wallets dropped to zero
-  throughput for the remaining six minutes with no error surfaced.</p>
-  <p>This interacts badly with rate limiting. A brief 403 does not degrade a long run &mdash; it ends
-  it, and from the client an idle chain and a dead connection look identical.</p>
-  <p><b>Confirmed present, and narrow.</b> Reviewer feedback is that the wallet SDK has retry
-  capabilities and that this should not happen; we checked where they are. The node RPC client
-  (<code>PolkadotNodeClient</code>) reconnects on a one-second schedule with no timeout, and the prover
-  client retries 502/503/504. The indexer <em>subscription</em> client does not:
-  <code>packages/indexer-client/src/effect/WsSubscriptionClient.ts</code> constructs graphql-ws with
-  <code>shouldRetry: () =&gt; false</code> in <code>wallet-sdk-indexer-client</code> 1.2.3 (our ledger-8
-  harness), 1.3.0-beta.1 (the 2.0 stack), and on <code>midnight-wallet</code> main as of 2026-09-14
-  (commit <code>f4e18fdc</code>). Sync runs over that subscription, so the one client without a retry is
-  the one every wallet depends on.</p>
-  <p class="fix"><b>Suggested:</b> give the subscription client the same reconnection schedule the node
-  client already has, or at minimum an observable disconnected state. We had to build an external
-  watchdog that detects stalled progress and rebuilds the wallet, because <code>isConnected</code>
-  keeps reporting <code>true</code> after <code>stop()</code>.</p>
+<div class="card med">
+  <h3><span class="chip med">Retracted</span> "A single refused WebSocket permanently retires a wallet"</h3>
+  <p>An earlier revision reported that one refused indexer WebSocket connect was unrecoverable, because
+  <code>wallet-sdk-indexer-client</code> constructs graphql-ws with <code>shouldRetry: () =&gt; false</code>.
+  That line is real and still present on <code>midnight-wallet</code> main (2026-09-14), but it is not
+  the layer that matters. Reviewer feedback said the SDK has retry capabilities; we tested it rather than
+  argue. A throwaway wallet was pointed at a local WebSocket endpoint that (a) accepts and closes
+  immediately, (b) rejects the upgrade with HTTP 403, as the rate limiter does, and (c) proxies to the
+  real indexer for 20 s and then drops and refuses. In all three cases every sub-wallet reconnected on
+  an exponential schedule &mdash; 1, 2, 4, 8, 16, 32, 64 s after the failure &mdash; and the source
+  (<code>RunningV1Variant.js</code>, <code>Schedule.exponential(1 s, 2)</code>, jittered, capped at
+  2 minutes) shows it does not give up. The same schedule is present in the
+  <code>dust-wallet</code> 4.1.0 that <code>wallet-sdk</code> 1.1.0 pinned, so it was there during our
+  preview runs too.</p>
+  <p>What we actually observed &mdash; two wallets at zero throughput for six minutes after a 403
+  &mdash; is consistent with the rate limiter's block simply outlasting the run while the reconnects
+  kept failing, not with an absent retry. <code>progress.isConnected</code> did read <code>false</code>
+  throughout, which is the observable state we said was missing.</p>
+  <p class="fix"><b>What remains:</b> nothing is surfaced as an error or event while reconnection is
+  in progress, so a caller has to poll <code>isConnected</code> to know the wallet is degraded, and
+  once the backoff reaches its 2-minute cap a recovered endpoint is noticed up to 2 minutes late. Both
+  are ergonomics, not defects. Reproduction: <code>repro/README.md</code>, B3.</p>
 </div>
 
 <div class="card high">
@@ -769,9 +774,10 @@ does not provide an export named 'Clock'</code></pre>
   <p>Measured thresholds: clean at <code>&le;0.25 req/s</code> serial, sporadic 403s from
   <code>~4.6 req/s</code>, hard IP block at <code>~12 req/s</code> sustained, recovering after 1&ndash;3
   minutes of quiet. The block covers indexer, RPC and faucet over <b>both HTTP and WebSocket</b>.</p>
-  <p>Because sync runs over the WebSocket, a rate-limited IP cannot sync wallets at all &mdash; and
-  combined with <code>shouldRetry: false</code> above, a momentary limit permanently kills every
-  wallet in the process.</p>
+  <p>Because sync runs over the WebSocket, a rate-limited IP cannot sync wallets at all. The wallets
+  do keep reconnecting (see the retracted card above), but for as long as the block lasts every
+  attempt is refused, so from the client a 1&ndash;3 minute IP block is 1&ndash;3 minutes of a wallet
+  that looks idle.</p>
 </div>
 
 <div class="card med">
@@ -784,10 +790,16 @@ does not provide an export named 'Clock'</code></pre>
     ledger-8-compatible choice.</li>
     <li>Private-state passwords now require 3 of 4 character classes, not just length &ge; 16.
     Existing passphrases fail at deploy time with <code>Found: 2</code>.</li>
-    <li>The ledger package is <code>@midnightntwrk/ledger-v9</code> &mdash; no hyphen, unlike every
-    other package.</li>
-    <li>Proof server 9.x dropped <code>--network</code>; the only flag is <code>--num-workers</code>,
-    so ledger-8 launch commands fail outright.</li>
+    <li>The ledger package is published under <b>two</b> npm scopes. The 2.0 SDK betas depend on
+    <code>@midnightntwrk/ledger-v9</code> (no hyphen, unlike every other Midnight package), whose
+    <code>latest</code> dist-tag points at <code>0.1.0-rc.1</code> from June even though
+    <code>1.0.0-rc.5</code> exists, so <code>npm i @midnightntwrk/ledger-v9</code> without a version
+    installs a stale prerelease. The hyphenated <code>@midnight-ntwrk/ledger-v9</code> only began
+    publishing on 2026-08-10 (rc.3 onward) and carries the same rc.4 / rc.5.</li>
+    <li><b>Retracted:</b> an earlier revision said proof server 9.x dropped <code>--network</code>.
+    Running the binary inside each image shows the flag set is identical across 7.0.0-rc.1, 8.1.0 and
+    9.0.0-rc.5 (<code>--num-workers --port --job-capacity --job-timeout --no-fetch-params --verbose</code>)
+    and none of them ever accepted <code>--network</code>; the flag came from our own launch script.</li>
     <li><code>compactc 0.33.0-rc.2</code>, the version the document specifies, was never published to
     the compact release channel &mdash; <code>compact update 0.33</code> fails with
     <code>No version matching 0.33 found</code>. The lowest installable toolchain is
