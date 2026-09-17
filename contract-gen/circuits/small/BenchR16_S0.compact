@@ -1,0 +1,38 @@
+// GENERATED FILE -- do not edit by hand. Produced by gen_circuits.py.
+// Synthetic benchmark circuit for DUST cost / block fullness measurement.
+//   hash rounds : 16   (drives circuit size k)
+//   ledger slots: 0    (drives public input count)
+
+pragma language_version >= 0.23.0;
+
+import CompactStandardLibrary;
+
+// Accumulator for the padding chain. One write, constant across all variants,
+// so it does not pollute the public-input count when sweeping --rounds.
+export ledger acc: Bytes<32>;
+
+// Private seed. Kept as a witness so the padding chain depends on secret data and
+// cannot be constant-folded away by the compiler.
+witness wit_seed(): Bytes<32>;
+
+export circuit run(): [] {
+  const h0 = disclose(wit_seed());
+  const h1 = persistentHash<Vector<2, Bytes<32>>>([h0, h0]);
+  const h2 = persistentHash<Vector<2, Bytes<32>>>([h1, h0]);
+  const h3 = persistentHash<Vector<2, Bytes<32>>>([h2, h0]);
+  const h4 = persistentHash<Vector<2, Bytes<32>>>([h3, h0]);
+  const h5 = persistentHash<Vector<2, Bytes<32>>>([h4, h0]);
+  const h6 = persistentHash<Vector<2, Bytes<32>>>([h5, h0]);
+  const h7 = persistentHash<Vector<2, Bytes<32>>>([h6, h0]);
+  const h8 = persistentHash<Vector<2, Bytes<32>>>([h7, h0]);
+  const h9 = persistentHash<Vector<2, Bytes<32>>>([h8, h0]);
+  const h10 = persistentHash<Vector<2, Bytes<32>>>([h9, h0]);
+  const h11 = persistentHash<Vector<2, Bytes<32>>>([h10, h0]);
+  const h12 = persistentHash<Vector<2, Bytes<32>>>([h11, h0]);
+  const h13 = persistentHash<Vector<2, Bytes<32>>>([h12, h0]);
+  const h14 = persistentHash<Vector<2, Bytes<32>>>([h13, h0]);
+  const h15 = persistentHash<Vector<2, Bytes<32>>>([h14, h0]);
+  const h16 = persistentHash<Vector<2, Bytes<32>>>([h15, h0]);
+
+  acc = h16;
+}

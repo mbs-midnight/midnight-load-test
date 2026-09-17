@@ -1,0 +1,21 @@
+// GENERATED probe -- compile this FIRST, before generating the ladder.
+// Smallest circuit exercising every construct the generator relies on:
+// ledger cells, a witness, disclose(), a persistentHash chain, and ledger writes.
+// If this compiles, the template is sound and the ladder will generate cleanly.
+
+pragma language_version >= 0.23.0;
+
+import CompactStandardLibrary;
+
+export ledger acc: Bytes<32>;
+export ledger slot0: Bytes<32>;
+
+witness wit_seed(): Bytes<32>;
+
+export circuit run(): [] {
+  const h0 = disclose(wit_seed());
+  const h1 = persistentHash<Vector<2, Bytes<32>>>([h0, h0]);
+  const h2 = persistentHash<Vector<2, Bytes<32>>>([h1, h0]);
+  acc = h2;
+  slot0 = h2;
+}

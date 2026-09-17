@@ -1,0 +1,92 @@
+// GENERATED FILE -- do not edit by hand. Produced by gen_circuits.py.
+// Synthetic benchmark circuit for DUST cost / block fullness measurement.
+//   hash rounds : 64   (drives circuit size k)
+//   ledger slots: 2    (drives public input count)
+
+pragma language_version >= 0.23.0;
+
+import CompactStandardLibrary;
+
+// Accumulator for the padding chain. One write, constant across all variants,
+// so it does not pollute the public-input count when sweeping --rounds.
+export ledger acc: Bytes<32>;
+
+// Public-input knob: one Impact VM write instruction each.
+export ledger slot0: Bytes<32>;
+export ledger slot1: Bytes<32>;
+
+// Private seed. Kept as a witness so the padding chain depends on secret data and
+// cannot be constant-folded away by the compiler.
+witness wit_seed(): Bytes<32>;
+
+export circuit run(): [] {
+  const h0 = disclose(wit_seed());
+  const h1 = persistentHash<Vector<2, Bytes<32>>>([h0, h0]);
+  const h2 = persistentHash<Vector<2, Bytes<32>>>([h1, h0]);
+  const h3 = persistentHash<Vector<2, Bytes<32>>>([h2, h0]);
+  const h4 = persistentHash<Vector<2, Bytes<32>>>([h3, h0]);
+  const h5 = persistentHash<Vector<2, Bytes<32>>>([h4, h0]);
+  const h6 = persistentHash<Vector<2, Bytes<32>>>([h5, h0]);
+  const h7 = persistentHash<Vector<2, Bytes<32>>>([h6, h0]);
+  const h8 = persistentHash<Vector<2, Bytes<32>>>([h7, h0]);
+  const h9 = persistentHash<Vector<2, Bytes<32>>>([h8, h0]);
+  const h10 = persistentHash<Vector<2, Bytes<32>>>([h9, h0]);
+  const h11 = persistentHash<Vector<2, Bytes<32>>>([h10, h0]);
+  const h12 = persistentHash<Vector<2, Bytes<32>>>([h11, h0]);
+  const h13 = persistentHash<Vector<2, Bytes<32>>>([h12, h0]);
+  const h14 = persistentHash<Vector<2, Bytes<32>>>([h13, h0]);
+  const h15 = persistentHash<Vector<2, Bytes<32>>>([h14, h0]);
+  const h16 = persistentHash<Vector<2, Bytes<32>>>([h15, h0]);
+  const h17 = persistentHash<Vector<2, Bytes<32>>>([h16, h0]);
+  const h18 = persistentHash<Vector<2, Bytes<32>>>([h17, h0]);
+  const h19 = persistentHash<Vector<2, Bytes<32>>>([h18, h0]);
+  const h20 = persistentHash<Vector<2, Bytes<32>>>([h19, h0]);
+  const h21 = persistentHash<Vector<2, Bytes<32>>>([h20, h0]);
+  const h22 = persistentHash<Vector<2, Bytes<32>>>([h21, h0]);
+  const h23 = persistentHash<Vector<2, Bytes<32>>>([h22, h0]);
+  const h24 = persistentHash<Vector<2, Bytes<32>>>([h23, h0]);
+  const h25 = persistentHash<Vector<2, Bytes<32>>>([h24, h0]);
+  const h26 = persistentHash<Vector<2, Bytes<32>>>([h25, h0]);
+  const h27 = persistentHash<Vector<2, Bytes<32>>>([h26, h0]);
+  const h28 = persistentHash<Vector<2, Bytes<32>>>([h27, h0]);
+  const h29 = persistentHash<Vector<2, Bytes<32>>>([h28, h0]);
+  const h30 = persistentHash<Vector<2, Bytes<32>>>([h29, h0]);
+  const h31 = persistentHash<Vector<2, Bytes<32>>>([h30, h0]);
+  const h32 = persistentHash<Vector<2, Bytes<32>>>([h31, h0]);
+  const h33 = persistentHash<Vector<2, Bytes<32>>>([h32, h0]);
+  const h34 = persistentHash<Vector<2, Bytes<32>>>([h33, h0]);
+  const h35 = persistentHash<Vector<2, Bytes<32>>>([h34, h0]);
+  const h36 = persistentHash<Vector<2, Bytes<32>>>([h35, h0]);
+  const h37 = persistentHash<Vector<2, Bytes<32>>>([h36, h0]);
+  const h38 = persistentHash<Vector<2, Bytes<32>>>([h37, h0]);
+  const h39 = persistentHash<Vector<2, Bytes<32>>>([h38, h0]);
+  const h40 = persistentHash<Vector<2, Bytes<32>>>([h39, h0]);
+  const h41 = persistentHash<Vector<2, Bytes<32>>>([h40, h0]);
+  const h42 = persistentHash<Vector<2, Bytes<32>>>([h41, h0]);
+  const h43 = persistentHash<Vector<2, Bytes<32>>>([h42, h0]);
+  const h44 = persistentHash<Vector<2, Bytes<32>>>([h43, h0]);
+  const h45 = persistentHash<Vector<2, Bytes<32>>>([h44, h0]);
+  const h46 = persistentHash<Vector<2, Bytes<32>>>([h45, h0]);
+  const h47 = persistentHash<Vector<2, Bytes<32>>>([h46, h0]);
+  const h48 = persistentHash<Vector<2, Bytes<32>>>([h47, h0]);
+  const h49 = persistentHash<Vector<2, Bytes<32>>>([h48, h0]);
+  const h50 = persistentHash<Vector<2, Bytes<32>>>([h49, h0]);
+  const h51 = persistentHash<Vector<2, Bytes<32>>>([h50, h0]);
+  const h52 = persistentHash<Vector<2, Bytes<32>>>([h51, h0]);
+  const h53 = persistentHash<Vector<2, Bytes<32>>>([h52, h0]);
+  const h54 = persistentHash<Vector<2, Bytes<32>>>([h53, h0]);
+  const h55 = persistentHash<Vector<2, Bytes<32>>>([h54, h0]);
+  const h56 = persistentHash<Vector<2, Bytes<32>>>([h55, h0]);
+  const h57 = persistentHash<Vector<2, Bytes<32>>>([h56, h0]);
+  const h58 = persistentHash<Vector<2, Bytes<32>>>([h57, h0]);
+  const h59 = persistentHash<Vector<2, Bytes<32>>>([h58, h0]);
+  const h60 = persistentHash<Vector<2, Bytes<32>>>([h59, h0]);
+  const h61 = persistentHash<Vector<2, Bytes<32>>>([h60, h0]);
+  const h62 = persistentHash<Vector<2, Bytes<32>>>([h61, h0]);
+  const h63 = persistentHash<Vector<2, Bytes<32>>>([h62, h0]);
+  const h64 = persistentHash<Vector<2, Bytes<32>>>([h63, h0]);
+
+  acc = h64;
+  slot0 = h64;
+  slot1 = h64;
+}

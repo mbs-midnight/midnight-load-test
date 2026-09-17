@@ -1,0 +1,23 @@
+// GENERATED FILE -- do not edit by hand. Produced by gen_circuits.py.
+// Synthetic benchmark circuit for DUST cost / block fullness measurement.
+//   hash rounds : 1   (drives circuit size k)
+//   ledger slots: 0    (drives public input count)
+
+pragma language_version >= 0.23.0;
+
+import CompactStandardLibrary;
+
+// Accumulator for the padding chain. One write, constant across all variants,
+// so it does not pollute the public-input count when sweeping --rounds.
+export ledger acc: Bytes<32>;
+
+// Private seed. Kept as a witness so the padding chain depends on secret data and
+// cannot be constant-folded away by the compiler.
+witness wit_seed(): Bytes<32>;
+
+export circuit run(): [] {
+  const h0 = disclose(wit_seed());
+  const h1 = persistentHash<Vector<2, Bytes<32>>>([h0, h0]);
+
+  acc = h1;
+}

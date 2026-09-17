@@ -7,11 +7,10 @@ For the 4-5 contract plan (k=14..19, varying slots), point it at the managed
 output directories the compiler produced:
 
   python3 make_manifest.py \\
-      --managed circuits/managed/BenchR220_S0 \\
-      --managed circuits/managed/BenchR880_S0 \\
-      --managed circuits/managed/BenchR3500_S4 \\
-      --managed circuits/managed/BenchR14000_S8 \\
-      --artifacts artifacts.csv \\
+      --managed contracts/BenchR4_S0 \\
+      --managed contracts/BenchR64_S0 \\
+      --managed contracts/BenchR64_S8 \\
+      --artifacts contract-gen/circuits/artifacts.csv \\
       --out ladder.json
 
 It reads rounds/slots from the directory name (BenchR{rounds}_S{slots}), pulls k

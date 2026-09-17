@@ -31,10 +31,11 @@ Three independent npm projects, because they pin mutually incompatible SDK gener
 | `stagenet/` | ledger-9: midnight-js 5.0.0-beta.7, `@midnightntwrk/ledger-v9` 1.0.0-rc.3, wallet-sdk 2.0.0-beta.2 | The **stagenet** smoke/sustain harness, the fee-price and cost-decomposition scripts, the defect reproductions |
 | `stagenet-next/` | newest betas: midnight-js 5.0.0-beta.8, ledger-v9 1.0.0-rc.4, wallet-sdk 2.0.0-beta.3 | The same reproductions against the newest published stack. See `BUG_REPORTS.md` #1 for why it cannot transact on stagenet today |
 | `repro/` | shell + ledger-8 | Reproduction wrappers and the index (`repro/README.md`) |
+| `contract-gen/` | Python + `compact` 0.31 | Generator for the `BenchR<rounds>_S<slots>` benchmark circuits the root `deploy`/`load` path uses; its own `README.md` |
 
-`contracts/` holds compiled benchmark circuits (`BenchR<rounds>_S<slots>`), used
+`contracts/` holds the compiled benchmark circuits (`BenchR<rounds>_S<slots>`), used
 only by the ledger-8 deploy path; the multi-gigabyte `keys/` and `zkir/` outputs are
-gitignored and regenerate with `compact`.
+gitignored and regenerate from the sources in `contract-gen/` with `compact`.
 
 ## Root: the preview load test (ledger-8)
 
