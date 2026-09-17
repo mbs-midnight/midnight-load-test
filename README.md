@@ -1,134 +1,146 @@
-# Preprod deploy + DUST fleet load-test harness
+# Midnight load test, fee-floor investigation and capacity analysis
 
-Deploys benchmark circuits to Midnight **Preprod** and load-tests them through a
-hosted (**Arkhia ZKPaas**) proof server with a **fleet of wallets**, then
-attributes DUST cost and block fullness per circuit size k.
+Everything behind two findings reports for the Midnight Foundation:
 
-## What is in this folder (all of it -- nothing else is referenced)
+- **`MNF_REPORT.html`** — *Filling Midnight Blocks.* The preview load test, why the
+  DUST fee price never moved (mainnet and preview have sat at the `MIN_COST` floor
+  since their second hour), the ledger-9 fix verified on stagenet, which of the
+  five cost dimensions actually binds, and the SDK defects met along the way.
+  Published copy: https://claude.ai/code/artifact/6081a276-9acb-44d8-985f-55dcab3595a3
+- **`CAPACITY_CEILING.html`** — *Midnight's Capacity Ceiling.* Ledger-level
+  throughput by transaction shape from a five-dimension cost decomposition of
+  1,334 transactions on mainnet, preview and stagenet. Published copy:
+  https://claude.ai/code/artifact/6bec22f2-50d7-4d3c-af07-07f9670743d1
+- **`BUG_REPORTS.md`** — engineering-facing write-up of every reproduced defect,
+  one entry each, with the script that reproduces it.
+- **`MPS-dust-fee-price.md`** — a draft Midnight Protocol Specification for the
+  fee floor, shelved once it was clear ledger 9 already carries the fix
+  (`min_block_price`). Kept for the attack-economics section.
 
-```
-harness/
-  package.json            SDK deps pinned to the ledger-8 line
-  tsconfig.json
-  env.preprod.example     copy to .env.preprod and fill in (no leading dot so it is visible)
-  .gitignore              covers .env.preprod and wallets.json
-  proxy.mjs               x-api-key injecting proxy, ONLY if preflight says needed
-  gen_wallets.py          make wallets.json for the fleet
-  make_manifest.py        make ladder.json from your compiled contracts
-  join_sweep.py           produce the final fee/fullness-vs-k tables
-  src/
-    providers.ts          network config + provider assembly (one buildWallet stub to wire)
-    preflight.ts          no-cost checks: Arkhia auth mode, indexer, wallet
-    deploy.ts             deploy contracts cheapest-k-first -> deployments.json
-    load_test.ts          the fleet load generator (replaces run_sweep.ts)
-    run_sweep.ts          single-wallet paced driver; kept ONLY for a gentle
-                          low-rate attribution pass -- it is NOT a load test
-```
+A companion tool, the NIGHT holding estimator for DApps that sponsor their
+users' DUST, lives in its own repository (`mbs-midnight/fee-estimator`) and is
+calibrated on the `shapes_*.jsonl` data produced here.
 
-Files created AT RUNTIME (why they are not shipped): `.env.preprod` (your
-secrets), `wallets.json` (gen_wallets.py), `ladder.json` (make_manifest.py),
-`deployments.json` (deploy.ts), `calls.jsonl` / `run_meta.json` (load_test.ts).
+## Layout
 
-## Do the compiled contracts live here?
+Three independent npm projects, because they pin mutually incompatible SDK generations.
 
-No. The `.compact` sources aren't needed at all at runtime. What deploy/load need
-is each contract's **compiled managed output** -- the directory containing
-`keys/`, `zkir/`, and `contract/index.js` -- and `ladder.json` points at those
-directories by absolute path, wherever they are. `make_manifest.py` refuses to
-write a manifest if any of the three is missing, so path problems surface before
-any DUST is spent.
+| Directory | Stack | What it is |
+|---|---|---|
+| `.` (root) | ledger-8: midnight-js 4.x, `@midnight-ntwrk/ledger-v8` 8.1.0, wallet-sdk 1.1.0 | The **preview** load-test harness (`src/`), the cross-network analysis scripts, the reports |
+| `stagenet/` | ledger-9: midnight-js 5.0.0-beta.7, `@midnightntwrk/ledger-v9` 1.0.0-rc.3, wallet-sdk 2.0.0-beta.2 | The **stagenet** smoke/sustain harness, the fee-price and cost-decomposition scripts, the defect reproductions |
+| `stagenet-next/` | newest betas: midnight-js 5.0.0-beta.8, ledger-v9 1.0.0-rc.4, wallet-sdk 2.0.0-beta.3 | The same reproductions against the newest published stack. See `BUG_REPORTS.md` #1 for why it cannot transact on stagenet today |
+| `repro/` | shell + ledger-8 | Reproduction wrappers and the index (`repro/README.md`) |
 
-## The concurrency model (read before sizing the run)
+`contracts/` holds compiled benchmark circuits (`BenchR<rounds>_S<slots>`), used
+only by the ledger-8 deploy path; the multi-gigabyte `keys/` and `zkir/` outputs are
+gitignored and regenerate with `compact`.
 
-**One wallet = one lane.** Concurrent transactions from a single wallet balance
-against the same DUST UTXOs; two in-flight calls select overlapping dust, one
-confirms, the other dies as a double-spend. So `load_test.ts`:
+## Root: the preview load test (ledger-8)
 
-- runs a **strictly serialized loop per wallet** (prove -> submit -> log -> next),
-- gets ALL parallelism from **fleet size** -- "simulate 300 users" means 300
-  funded wallets in wallets.json,
-- caps aggregate submission rate with a global token-bucket (`--target-tps`),
-  or runs flat-out when omitted, to find the fleet's natural ceiling.
+`src/` is the harness that produced the load-test half of `MNF_REPORT.html`
+(24 wallets, August 2026). The useful entry points, all via `npm run`:
 
-Proving dominates latency, so **wallets concurrently proving = your in-flight
-depth at Arkhia**. The "up to 20 prove batches in parallel" toggle means the
-endpoint has 20 lanes: you need **>= 20 wallets** to fill them, and beyond that
-you queue at their end -- visible as p50 prove_ms growing with fleet size, which
-is itself a result worth recording (it measures ZKPaas saturation).
+| Script | Purpose |
+|---|---|
+| `preflight` | prove every external dependency works before spending NIGHT |
+| `addresses` | turn a fleet manifest into fundable addresses |
+| `status`, `delegate` | real balances; register NIGHT UTXOs for DUST |
+| `register` / `deregister` / `split` / `churn` / `flood` | phases of `src/flood.ts`: fill blocks with cheap unshielded transfers, one serialized lane per wallet, snapshot-restored wallets |
+| `audit` | how many fleet lanes are actually live |
+| `deploy`, `load` | the original benchmark-circuit path (deploy `BenchR*_S*`, drive contract calls by circuit size k) |
+| `test:ws`, `test:sync`, `test:address`, `test:networks` | diagnostics that were each written to isolate one failure |
 
-Throughput back-of-envelope: `tx/s ~= wallets / prove_seconds`. 20 wallets at
-30 s proofs ~= 0.67 tx/s ~= 4 tx per 6 s block. Size the fleet from observed
-prove_ms, not hope. Hundreds of simultaneous users at k=14..19 likely means a
-fleet in the low hundreds -- every one individually funded and DUST-registered
-(DUST is non-transferable; there is no funding shortcut through one rich wallet).
+Helpers: `prime.sh` / `prime_pairs.sh` (cold-sync wallets in small batches and
+snapshot them), `launch_2h.sh` (the two-hour run), `ramp.sh` (offered-rate ramp
+that located the ~2 tx/s mempool ceiling), `indexer_proxy.mjs` and `proxy.mjs`
+(split HTTP/WebSocket proxies; `indexer_proxy.mjs` injects the rate-limit
+bypass header from the environment), `live_fullness.py` (per-block byte
+fullness during a run), `gen_wallets.py` / `make_manifest.py` /
+`join_sweep.py` (fleet manifest, circuit ladder, fee-vs-k join).
 
-## Sequence
+Result logs from those runs (`*.jsonl`, `final_fullness.csv`, `ramp_*.jsonl`,
+`probe_*.jsonl`) are tracked; they are the evidence behind the report's numbers.
+
+## Cross-network analysis (root and `stagenet/`)
+
+These read the indexers only and spend nothing. They are what turned the load
+test into the fee-floor finding.
+
+| Script | What it answers |
+|---|---|
+| `netparams.mjs` | decode live `ledgerParameters` on all three networks; block limits, fee prices, cost-model diff |
+| `params_diff.mjs`, `preview_params.mjs`, `stagenet/chain_params.mjs` | live parameters vs the SDK's genesis defaults (143 differing lines) |
+| `mainnet_trend.mjs`, `preview_trend.mjs`, `stagenet/price_trend.mjs` | `overall_price` sampled across each chain's history; mainnet at `MIN_COST` since block 1,197 |
+| `mainnet_fees.mjs`, `mainnet_shapes.mjs`, `stagenet/tx_fees.mjs` | who pays fees and whether shape changes the fee (1 SPECK for everything on ledger 8) |
+| `stagenet/price_watch.mjs`, `stagenet/find_block.mjs` | per-block price and occupancy; where our >50% block landed and the rise it caused |
+| `stagenet/harvest.mjs` | recover node-reported fullness from price movements over 6,000 blocks (54 blocks over 50%) |
+| `stagenet/decompose.mjs`, `stagenet/decompose_all.mjs`, `decompose_v8.mjs` | rebuild every transaction locally and run `cost(params)` for the five dimensions; the census behind `CAPACITY_CEILING.html` |
+
+Outputs: `shapes_mainnet.jsonl`, `shapes_preview.jsonl`, `stagenet/shapes_stagenet.jsonl`,
+`stagenet/shapes_ours.jsonl`, `stagenet/harvest.jsonl`, `stagenet/price_*.jsonl`.
+
+## `stagenet/`: the ledger-9 harness
+
+`src/wallet.ts` builds a wallet on the 2.0 stack and documents every change
+from the 1.x line inline. `src/smoke.ts` has phases `addr | status | register |
+shield | unshielded | shielded | churn | burst | sustain`; `sustain` pre-proves a
+batch and releases one per block, which is how the 56.9%-full block was produced.
+`src/mint.ts` deploys midnight-js's own shielded e2e fixture and mints a
+shielded token, since stagenet has no shielded faucet and NIGHT cannot be
+swapped into the shielded pool.
 
 ```bash
-cd harness && npm install
-
-# contracts: compile your 4-5 variants (k=14..19, varying slots), then
-python3 make_manifest.py \
-  --managed /path/to/managed/BenchR<r1>_S<s1> \
-  --managed /path/to/managed/BenchR<r2>_S<s2> \
-  ... \
-  --artifacts /path/to/artifacts.csv --out ladder.json
-
-# fleet
-python3 gen_wallets.py --count 25 --out wallets.json
-# fund EACH wallet: faucet/internal tNIGHT -> delegate -> wait for tDUST > 0
-# verify: python3 ../dust_budget_monitor.py --roster fleet.csv --endpoint <indexer> --once
-
-# secrets + checks (no DUST spent)
-cp env.preprod.example .env.preprod   # fill in; set ONE of seed/mnemonic
-set -a && . ./.env.preprod && set +a
-npm run preflight                       # settles the Arkhia auth question
-
-# deploy (cheapest k first) -> deployments.json
-npm run deploy -- --manifest ladder.json
-
-# monitor in a second terminal
-python3 ../dust_budget_monitor.py --roster fleet.csv --endpoint <indexer> \
-  --watch 30 --min-runway-s 600 --halt-file ./HALT
-
-# LOAD TEST
-npm run load -- --deployments deployments.json --wallets wallets.json \
-  --duration-s 1800 --halt-file ./HALT --mix "14:1,16:1,17:1,19:1"
-# add --target-tps N to cap the rate; omit to find the ceiling
-
-# attribute + join
-python3 ../midnight_dust_probe.py --endpoint <indexer> \
-  --from-time <started_utc> --to-time <ended_utc> --out-dir sweep_out
-python3 join_sweep.py --calls calls.jsonl \
-  --transactions sweep_out/transactions.csv --blocks sweep_out/blocks.csv
+cd stagenet && npm install                 # needs the utilities@1.2.1 override in package.json
+cp env.stagenet.example .env.stagenet     # then fill in MN_STAGENET_SEED
+docker run -d --name ps9 -p 6310:6300 midnightntwrk/proof-server:9.0.0-rc.5_experimental "midnight-proof-server --num-workers 8"
+set -a && . ./.env.stagenet && set +a
+npm run status
+npm run unshielded -- --outputs 4 --amount 1000000000     # amount is PER OUTPUT, in STAR
+NODE_OPTIONS=--max-old-space-size=8192 npx tsx src/smoke.ts --phase sustain --n 4 --outputs 2
 ```
 
-## Verified vs. must-confirm
+`--amount` is per output and in STAR (1 NIGHT = 10⁶ STAR). Proving is local;
+the wallet SDK stages one transaction per NIGHT UTXO, so `sustain --n N` needs
+N funded UTXOs of roughly equal size (see `BUG_REPORTS.md` and the report's
+"Staging a batch" bullet).
 
-**Verified against Midnight docs (updated 2026-07-27):** provider assembly,
-deploy/find-contract calls, Preprod endpoints, network id, faucet->delegate->tDUST
-funding flow. **Tested here:** the rate governor under 30 concurrent workers, the
-weighted k-mix picker, make_manifest happy/error paths, join_sweep's control
-readout against confounded fixtures.
+## `repro/`: defect reproductions
 
-**Must confirm on your side:**
-1. **Arkhia auth mode** -- run preflight; use proxy.mjs only if it says header-required.
-2. **buildWallet() in providers.ts** -- deliberate stub; wire to your installed
-   `@midnight-ntwrk/wallet-sdk-facade` version. Only place seed material lives.
-3. **SDK versions** -- reconcile the ledger-8 pins together if anything moved.
+One script per defect card, each printing `RESULT <name>: REPRODUCED | NOT
+REPRODUCED | SKIPPED — evidence`. `./repro/run.sh` runs the offline and
+read-only groups in about a minute; `--wallet`, `--docker` and `--install` add
+the rest; the load tests refuse to run without `--confirm`. Results for both
+stacks, and the two claims the suite disproved, are in `repro/README.md`.
 
-## Design invariant
+## Secrets and cost
 
-The load generator records `txId -> k` and timings; it never computes a fee. Fees
-come only from the indexer via the probe, so the generator cannot report the
-number it hoped for. `join_sweep.py` prints the control readout: fee should be
-flat across k and move with slots (public inputs); if k appears to matter, it
-tells you which confound to check first.
+`env.preprod.example` and `stagenet/env.stagenet.example` list every variable
+the harnesses read. Copy each to its dotted name and fill it in.
 
-## Safety
+Read at runtime from gitignored files, never committed: `.env.preprod` (preview
+fleet secrets and the rate-limit bypass token), `wallets.json` / `fleet*.json`
+(fleet seeds), `stagenet/.env.stagenet` (the stagenet seed), `.wallet-state/`
+and `.mnstate/` (wallet databases). The `.gitignore` covers them; a content scan
+for the actual secret values was run before the first push.
 
-- `.env.preprod` and `wallets.json` hold spend keys. Both gitignored.
-- Deploy is cheapest-k-first so funding problems fail cheap.
-- Every worker polls the DUST monitor's halt file between calls; a drying fleet
-  stops submissions instead of stranding wallets.
-- Preprod is shared. Coordinate before sustained high-fullness phases.
+The root `flood`/`load` scripts and the stagenet `sustain`/`burst` phases spend
+test-network DUST and drive load at shared infrastructure. Run `npm run preflight`
+first; do not launch a sustained run without coordinating on the network.
+
+## Things this repository established that are easy to get wrong
+
+- Fullness is the **maximum** over five cost dimensions, and bytes on the wire
+  is not the one that binds for transfers or deployments; state writes are.
+- `overall_price` is the price of a **full block**, not a minimum fee; a
+  transaction pays for the fraction it consumes.
+- Below 50% fullness the price **decays**; no amount of sub-50% load produces a
+  fee reading. Mainnet and preview (ledger 8) are pinned at `MIN_COST`; stagenet
+  (ledger 9) has a floor of 10.
+- `LedgerParameters.initialParameters()` is a genesis constant. Decode the live
+  `ledgerParameters` from a block instead.
+- The wallet SDK tracks pending DUST **per UTXO**, and the balancer selects the
+  smallest coin first, so crumb UTXOs get swept into every build.
+- Two things we published and later withdrew: the indexer WebSocket *does*
+  reconnect (exponential, capped at 2 min), and no proof-server generation ever
+  had a `--network` flag.
