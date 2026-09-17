@@ -1,3 +1,0 @@
-{"phase":"churn","wallet":"w002","txId":"0079d3e2ccb7cd51d84796dded114e038246c4bb37e5be3bc83d385a38de40c28e","outputs":1,"per":"5000000000","buildMs":177,"proveMs":2284,"submitMs":1179,"submitWait":"Submitted","total_ms":3640,"t":"2026-08-27T16:29:00.750Z"}
-{"phase":"churn","wallet":"w002","txId":"00b840a51d69bfe3acd55629f4953f13e4d06812628973fb322fe1b6ca512a7196","outputs":1,"per":"5000000000","buildMs":493,"proveMs":2280,"submitMs":1166,"submitWait":"Submitted","total_ms":3939,"t":"2026-08-27T16:29:24.489Z"}
-{"phase":"churn","wallet":"w002","txId":"008ee180bda0915867873b2da8ce50cb96a4cf3205342eeeb382022abf65ba5152","outputs":1,"per":"5000000000","buildMs":178,"proveMs":2281,"submitMs":1168,"submitWait":"Submitted","total_ms":3627,"t":"2026-08-27T16:29:47.933Z"}

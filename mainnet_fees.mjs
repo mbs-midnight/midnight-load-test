@@ -1,5 +1,5 @@
 /**
- * tx_fees.mjs -- who is actually paying fees on stagenet, and how much?
+ * mainnet_fees.mjs -- who is actually paying fees on MAINNET, and how much? (port of stagenet/tx_fees.mjs)
  *
  * overall_price has been pinned at the genesis value 10 for stagenet's whole
  * history, so fee VARIATION there can only come from transaction mix. If the

@@ -1,5 +1,5 @@
 /**
- * load_test.ts — fleet load generator. Replaces run_sweep.ts (which was a paced
+ * load_test.ts — fleet load generator. Replaces the earlier paced single-wallet driver (which was a paced
  * SEQUENTIAL driver and could not simulate concurrent users).
  *
  * THE CONCURRENCY MODEL, AND WHY IT IS SHAPED THIS WAY

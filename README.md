@@ -49,18 +49,22 @@ gitignored and regenerate with `compact`.
 | `register` / `deregister` / `split` / `churn` / `flood` | phases of `src/flood.ts`: fill blocks with cheap unshielded transfers, one serialized lane per wallet, snapshot-restored wallets |
 | `audit` | how many fleet lanes are actually live |
 | `deploy`, `load` | the original benchmark-circuit path (deploy `BenchR*_S*`, drive contract calls by circuit size k) |
-| `test:ws`, `test:sync`, `test:address`, `test:networks` | diagnostics that were each written to isolate one failure |
+| `test:sync` | cold-sync diagnostic per sub-wallet; wrapped by `repro/10-cold-sync-concurrency.sh` |
 
-Helpers: `prime.sh` / `prime_pairs.sh` (cold-sync wallets in small batches and
-snapshot them), `launch_2h.sh` (the two-hour run), `ramp.sh` (offered-rate ramp
-that located the ~2 tx/s mempool ceiling), `indexer_proxy.mjs` and `proxy.mjs`
-(split HTTP/WebSocket proxies; `indexer_proxy.mjs` injects the rate-limit
-bypass header from the environment), `live_fullness.py` (per-block byte
-fullness during a run), `gen_wallets.py` / `make_manifest.py` /
+Helpers: `prime_pairs.sh` (cold-sync wallets two at a time and snapshot them),
+`launch_2h.sh` (the two-hour run), `ramp.sh` (offered-rate ramp that located the
+~2 tx/s mempool ceiling), `indexer_proxy.mjs` (split HTTP/WebSocket proxy that
+injects the rate-limit bypass header from the environment), `live_fullness.py`
+(per-block byte fullness during a run), `gen_wallets.py` / `make_manifest.py` /
 `join_sweep.py` (fleet manifest, circuit ladder, fee-vs-k join).
 
-Result logs from those runs (`*.jsonl`, `final_fullness.csv`, `ramp_*.jsonl`,
-`probe_*.jsonl`) are tracked; they are the evidence behind the report's numbers.
+Only the logs that back a number in the report are kept: `final_churn.jsonl`,
+`final_fullness.csv`, `run_final_summary.txt` (the two-hour run), `ramp_*.jsonl`
+and `ramp_result.txt` (mempool ceiling), `probe_direct.jsonl` / `probe_inblock.jsonl`
+(submit-wait stage), `probe_v7.jsonl` and `prove_bench.jsonl` (proof-server
+throughput), `prime.jsonl` (cold-sync timing), `shielded_probe.jsonl` (shielded
+sizes), `calls.jsonl` / `deployments.json` / `ladder.json` (the benchmark-circuit
+path). Iteration logs from 25–30 August were removed on 2026-09-17.
 
 ## Cross-network analysis (root and `stagenet/`)
 

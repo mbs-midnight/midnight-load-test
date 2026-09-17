@@ -4,7 +4,7 @@
  *
  * CONTEXT
  * -------
- * The indexer confirms funds exist for the address (test_address.ts proves it), yet
+ * The indexer confirms funds exist for the address (the indexer's transactions query proves it), yet
  * the facade OOMs at ~4GB before the wallet ever reports them. The facade starts
  * three sub-wallets at once, so a crash tells you nothing about which one is
  * responsible. This starts each ALONE, with the same configuration, and samples
@@ -212,7 +212,7 @@ async function main() {
   } else if (lastRelevant === lastApplied && connected) {
     console.log('status:            caught up (lag 0)');
   } else if (!connected) {
-    console.log('status:            never connected -- run test_ws.ts');
+    console.log('status:            never connected -- check the indexer WebSocket URL and the WebSocket polyfill');
   }
 
   if (errors.length) {

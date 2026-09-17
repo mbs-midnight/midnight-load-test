@@ -9,7 +9,7 @@
  *   npm run deploy -- --manifest ../sweep/ladder.json --managed-root ../circuits/managed
  *
  * DEPLOY vs CALL: deploying establishes the contract; the sweep's per-call fees
- * come later in run_sweep.ts. Deploy cost itself is a useful datapoint (it also
+ * come later in load_test.ts. Deploy cost itself is a useful datapoint (it also
  * carries the verifier key on-chain), so we capture it.
  */
 

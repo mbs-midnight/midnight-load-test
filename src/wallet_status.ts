@@ -245,7 +245,6 @@ function printReport(r: Report) {
   if (r.nightBalances.length === 0) {
     console.log('  NIGHT: none seen.');
     console.log('    Confirm with the indexer directly (bypasses the SDK):');
-    console.log(`      npx tsx src/test_address.ts --address ${r.unshieldedAddress}`);
     console.log('    If that reports highestTransactionId=0, the indexer has no txs for');
     console.log('    this address and the funding went somewhere else.');
   } else {

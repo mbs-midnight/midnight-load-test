@@ -182,7 +182,7 @@ async function checkProofServer() {
     info(`Tried: ${PROOF_SERVER_URL}. For a LOCAL server it should be `);
     info('http://127.0.0.1:6300/ (default port 6300) and the docker container must be');
     info('running. For a hosted server, check the URL and network egress. NOTE: port');
-    info('6301 is the old proxy.mjs port -- the proof server itself listens on 6300.');
+    info('6301 was the old hosted-prover proxy port -- the proof server itself listens on 6300.');
     hardFail = true;
     return;
   }
@@ -225,7 +225,7 @@ async function checkProofServer() {
   if (winner.mode.includes('x-api-secret') && !winner.mode.startsWith('key in path')) {
     info('This needs BOTH headers on every request. httpClientProofProvider may not');
     info('attach headers, so run the bundled proxy in another terminal:');
-    info('  ARKHIA_API_KEY=... ARKHIA_API_SECRET=... node proxy.mjs');
+    info('  (the hosted-prover proxy was removed; run a local midnightntwrk/proof-server instead)');
     info('then set MN_PROOF_SERVER=http://127.0.0.1:6301/');
   }
 }

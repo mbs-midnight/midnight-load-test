@@ -87,7 +87,7 @@ import { WebSocket as WsPolyfill } from 'ws';
 // permanent and the wallet sits at connected=false / highestIndex=0 forever.
 //
 // So: only polyfill when there is no native implementation. Set
-// MN_FORCE_WS_POLYFILL=1 to override if `npx tsx src/test_ws.ts` shows the ws
+// MN_FORCE_WS_POLYFILL=1 to override if the wallet reports connected=false and the ws
 // package working where native does not.
 const hasNativeWebSocket = typeof (globalThis as any).WebSocket === 'function';
 const forcePolyfill = process.env.MN_FORCE_WS_POLYFILL === '1';
@@ -112,7 +112,7 @@ if (process.env.MN_DEBUG_WS === '1') {
 // WHY YOU MIGHT SWITCH: the dust wallet's sync accumulates unboundedly with chain
 // history (preprod ~2M blocks OOMs it). A younger network (preview) has far less
 // history, which may keep dust sync under the memory ceiling. Confirm the actual
-// tip with test_ws.ts [1] before committing -- if preview is also millions of
+// tip against the indexer [1] before committing -- if preview is also millions of
 // blocks deep, it will not help and a local/low-history devnet is the next lever.
 type Net = 'preprod' | 'preview' | 'qanet';
 const REMOTES: Record<Net, { indexer: string; indexerWs: string; node: string; faucet: string }> = {
@@ -240,7 +240,7 @@ export function walletConfiguration(proofServerUrl?: string) {
       indexerWsUrl: INDEXER_WS,
     },
     // Arkhia ZKPaas. If preflight reports the endpoint needs an x-api-key header
-    // and this config exposes no header hook, run proxy.mjs and point
+    // and this config exposes no header hook, run a header-injecting proxy (see indexer_proxy.mjs) and point
     // MN_PROOF_SERVER at the local proxy instead.
     provingServerUrl: new URL(proofServerUrl ?? PROOF_SERVER_URL),
     relayURL: new URL(NODE_RPC),
